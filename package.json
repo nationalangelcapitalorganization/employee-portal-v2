@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@tinymce/tinymce-react": "^2.4.0",
     "firebase": "^5.5.9",
     "materialize-css": "^1.0.0-rc.2",
     "moment": "^2.22.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
+    "react-html-parser": "^2.0.2",
     "react-redux": "^5.1.1",
     "react-redux-firebase": "^2.2.2",
     "react-router-dom": "^4.3.1",

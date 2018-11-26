@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { createProject } from '../../store/actions/projectActions'
 import { Redirect } from 'react-router-dom'
+import { Editor } from '@tinymce/tinymce-react'
 
 class CreateProject extends Component {
   state = {
@@ -15,6 +16,11 @@ class CreateProject extends Component {
     })
   }
 
+  handleEditorChange = (e) => {
+    const content = e.target.getContent()
+    this.setState({ content: content });
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
     this.props.createProject(this.state)
@@ -23,6 +29,7 @@ class CreateProject extends Component {
 
   render() {
     const { auth } = this.props
+    const apiKey = process.env.REACT_APP_TINY_MCE_API_KEY
     if (!auth.uid) { return <Redirect to='/signin' /> }
 
     return (
@@ -33,10 +40,23 @@ class CreateProject extends Component {
             <label htmlFor="title">Title</label>
             <input type="text" id="title" onChange={this.handleChange} />
           </div>
-          <div className="input-field">
-            <label htmlFor="content">Content</label>
-            <textarea id="content" className="materialize-textarea" onChange={this.handleChange}></textarea>
-          </div>
+
+            <Editor
+              id='content'
+              apiKey={apiKey}
+              initialValue="<p>Enter your Project here...</p>"
+              init={{
+                plugins: ['advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
+                  'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+                  'save table contextmenu directionality emoticons template paste textcolor'],
+                toolbar: 'formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview',
+                branding: false,
+                height: 400,
+                inline: true
+              }}
+              onChange={this.handleEditorChange}
+            />
+
           <div className="input-field">
             <button className="btn pink lighten-1 z-depth-0">Create</button>
           </div>

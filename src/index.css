@@ -10,10 +10,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: url(/img/mario-bg.png) no-repeat;
-  background-size: 100%;
-  background-position: bottom;
-  background-color: #95e8f3;
+  background: url(/img/triangle-bg.png);
+  background-color: #fff;
   min-height: 100%;
 }
 
@@ -37,4 +35,29 @@ input[type=password]:not(.browser-default):focus:not([readonly]),
 textarea.materialize-textarea:focus:not([readonly]) {
   border-color: #ec407a;
   box-shadow: none;
+}
+
+/* Navigation */
+
+#nav-logo {
+  height: 40px;
+}
+
+.signedIn-sidenav .user-view .background {
+  height: 120px;
+}
+
+.signedIn-sidenav>li:first-child {
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+.logo {
+    display: inline-block;
+    transform: translateY(-2px)
+}
+
+.logo>img {
+    vertical-align: middle;
+    padding-bottom: 3px;
 }

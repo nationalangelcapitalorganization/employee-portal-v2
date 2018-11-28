@@ -7,7 +7,7 @@ import { Editor } from '@tinymce/tinymce-react'
 class CreateProject extends Component {
   state = {
     title: '',
-    content: '',
+    content: 'Enter your Project here...',
   }
 
   handleChange = (e) => {
@@ -44,7 +44,7 @@ class CreateProject extends Component {
             <Editor
               id='content'
               apiKey={apiKey}
-              initialValue="<p>Enter your Project here...</p>"
+              initialValue={this.state.content}
               init={{
                 plugins: ['advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
                   'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',

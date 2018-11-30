@@ -17,7 +17,7 @@ const ProjectDetails = (props) => {
         <p>This project is not yet published.</p>
       </div>
     )
-  } else if (project && (!(project.publish) && project.authorId === auth.uid)) {
+  } else if (project && (project.publish || (!(project.publish) && project.authorId === auth.uid))) {
     return (
       <div className="container section project-details">
         <div className="card z-depth-0">

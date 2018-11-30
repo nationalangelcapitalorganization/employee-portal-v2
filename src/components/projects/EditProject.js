@@ -50,7 +50,7 @@ class EditProject extends Component {
           <p>This project is not yet published.</p>
         </div>
       )
-    } else if (project && (!(project.publish) && project.authorId === auth.uid)) {
+    } else if (project && (project.publish || (!(project.publish) && project.authorId === auth.uid))) {
       return (
         <div className="container">
           <form onSubmit={this.handleSubmit} className="white">

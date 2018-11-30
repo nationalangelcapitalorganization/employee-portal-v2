@@ -17,15 +17,40 @@ exports.projectCreated = functions.firestore
   .onCreate(doc => {
 
     const project = doc.data()
-    const notification = {
-      content: 'Added a new project',
-      user: `${project.authorFirstName} ${project.authorLastName}`,
-      time: admin.firestore.FieldValue.serverTimestamp()
-    }
 
-    return createNotification(notification)
+    if (project.publish) {
+      const notification = {
+        content: 'Added a new project',
+        user: `${project.authorFirstName} ${project.authorLastName}`,
+        time: admin.firestore.FieldValue.serverTimestamp()
+      }
+
+      return createNotification(notification)
+
+    } else { return null }
 
 })
+
+
+exports.projectCreated = functions.firestore
+  .document('projects/{projectId}')
+  .onUpdate(doc => {
+
+    const project = doc.data()
+
+    if (project.publish) {
+      const notification = {
+        content: 'Updated a project',
+        user: `${project.authorFirstName} ${project.authorLastName}`,
+        time: admin.firestore.FieldValue.serverTimestamp()
+      }
+
+      return createNotification(notification)
+
+    } else { return null }
+
+  })
+
 
 exports.userJoined = functions.auth.user()
   .onCreate(user => {
@@ -45,3 +70,5 @@ exports.userJoined = functions.auth.user()
       })
 
 })
+
+

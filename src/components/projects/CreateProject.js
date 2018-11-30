@@ -8,9 +8,11 @@ class CreateProject extends Component {
   state = {
     title: '',
     content: 'Enter your Project here...',
+    publish: null
   }
 
   handleChange = (e) => {
+    console.log(e)
     this.setState({
       [e.target.id]: e.target.value
     })
@@ -35,6 +37,12 @@ class CreateProject extends Component {
     return (
       <div className="container">
         <form onSubmit={this.handleSubmit} className="white">
+          <div className="switch right-align publish-switch">
+          <label>Publish:
+              <input id="publish" onChange={(e) => { this.setState({ publish: e.target.checked })}} type="checkbox" />
+              <span className="lever"></span>
+          </label>
+            </div>
           <h5 className="grey-text text-darken-3">Create a New Project</h5>
           <div className="input-field">
             <label htmlFor="title">Title</label>
@@ -58,7 +66,7 @@ class CreateProject extends Component {
             />
 
           <div className="input-field">
-            <button className="btn pink lighten-1 z-depth-0">Create</button>
+            <button className="btn pink lighten-1 z-depth-0">Save</button>
           </div>
         </form>
       </div>

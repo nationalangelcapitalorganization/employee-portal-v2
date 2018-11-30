@@ -20,6 +20,8 @@ code {
     monospace;
 }
 
+/* FORM STYLING */
+
 form {
   padding: 20px;
   margin-top: 60px;
@@ -47,6 +49,10 @@ form #content:focus {
   border-color: #ec407a;
 }
 
+.publish-switch {
+  margin-top: 15px;
+}
+
 
 
 /* Navigation */
@@ -72,4 +78,15 @@ form #content:focus {
 .logo>img {
     vertical-align: middle;
     padding-bottom: 3px;
+}
+
+
+/* Dashboard */
+
+.unpublished-container {
+  margin: 7px 0 !important;
+}
+
+.unpublished {
+  padding: 3px 5px;
 }

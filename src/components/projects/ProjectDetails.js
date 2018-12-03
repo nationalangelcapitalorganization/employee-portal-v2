@@ -9,6 +9,14 @@ import { Link } from 'react-router-dom'
 
 const ProjectDetails = (props) => {
   const { project, auth, id } = props
+
+
+  let editProjectButton = null
+
+  if (project.authorId === auth.uid) {
+    editProjectButton = <Link to={`/project/${id}/edit`} className='right btn pink lighten-1'>Edit</Link>
+  }
+
   if (!auth.uid) { return <Redirect to='/signin' /> }
 
   if (project && (!(project.publish) && project.authorId !== auth.uid)) {
@@ -22,7 +30,7 @@ const ProjectDetails = (props) => {
       <div className="container section project-details">
         <div className="card z-depth-0">
           <div className="card-content">
-            <Link to={`/project/${id}/edit`} className='right btn pink lighten-1'>Edit</Link>
+            { editProjectButton }
             <span className="card-title">{project.title}</span>
             <p className="unpublished-container">{project.publish ? null : <span className="white-text pink lighten-1 unpublished">Not yet Published</span>}</p>
             <div>{ReactHtmlParser(project.content)}</div>

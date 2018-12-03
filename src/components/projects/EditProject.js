@@ -8,14 +8,17 @@ import { Editor } from '@tinymce/tinymce-react'
 
 class EditProject extends Component {
   state = {
+    id: this.props.id ? this.props.id : '',
     title: this.props.project ? this.props.project.title : '',
     content: this.props.project ? this.props.project.content : 'Enter your Project here...',
-    publish: this.props.project ? this.props.project.publish : false
+    publish: this.props.project ? this.props.project.publish : false,
+    createdAt: this.props.project ? this.props.project.createdAt : null,
   }
 
 
   componentWillReceiveProps(nextProps) {
     this.setState({
+      id: nextProps.id,
       title: nextProps.project.title,
       content: nextProps.project.content,
       publish: nextProps.project.publish
@@ -44,10 +47,10 @@ class EditProject extends Component {
     const apiKey = process.env.REACT_APP_TINY_MCE_API_KEY
     if (!auth.uid) { return <Redirect to='/signin' /> }
 
-    if (project && (!(project.publish) && project.authorId !== auth.uid)) {
+    if (project && project.authorId !== auth.uid) {
       return (
         <div className="container center">
-          <p>This project is not yet published.</p>
+          <p>You are not authorized to edit this project.</p>
         </div>
       )
     } else if (project && (project.publish || (!(project.publish) && project.authorId === auth.uid))) {
@@ -105,7 +108,8 @@ const mapStateToProps = (state, ownProps) => {
   const project = projects ? projects[id] : null
   return {
     project: project,
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    id: id
   }
 }
 

@@ -9,7 +9,7 @@ const ProjectSummary = ({project}) => {
         <span className="card-title">{project.title}</span>
         <p>Posted by {project.authorFirstName} {project.authorLastName}</p>
         <p className="unpublished-container">{project.publish ? null : (<span className="pink lighten-1 white-text unpublished">Not yet published</span>)}</p>
-        <p className="grey-text">{ moment(project.createdAt.toDate()).calendar()}</p>
+        <p className="grey-text">{ project.createdAt ? moment(project.createdAt.toDate()).calendar() : null }</p>
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 export const createProject = (project) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
+  return (dispatch, getState, { getFirestore }) => {
     // make async call to database
     const firestore = getFirestore()
     const profile = getState().firebase.profile
@@ -20,20 +20,12 @@ export const createProject = (project) => {
 
 
 export const editProject = (project) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
-
+  return (dispatch, getState, { getFirestore }) => {
     const { id, ...noIdProject } = project
-
-    console.log(noIdProject)
      // make async call to database
      const firestore = getFirestore()
-     const profile = getState().firebase.profile
-     const authorId = getState().firebase.auth.uid
-     firestore.collection('projects').doc(project.id).set({
+     firestore.collection('projects').doc(project.id).update({
       ...noIdProject,
-      authorFirstName: profile.firstName,
-      authorLastName: profile.lastName,
-      authorId: authorId,
       editedAt: new Date()
     }).then(() => {
       dispatch({ type: 'EDIT_PROJECT', project })

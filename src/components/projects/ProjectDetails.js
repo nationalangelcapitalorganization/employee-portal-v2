@@ -13,7 +13,7 @@ const ProjectDetails = (props) => {
 
   let editProjectButton = null
 
-  if (project.authorId === auth.uid) {
+  if (project && project.authorId === auth.uid) {
     editProjectButton = <Link to={`/project/${id}/edit`} className='right btn pink lighten-1'>Edit</Link>
   }
 

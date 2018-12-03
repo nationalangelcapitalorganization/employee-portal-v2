@@ -53,6 +53,24 @@ form #content:focus {
   margin-top: 15px;
 }
 
+form h5 {
+  margin-bottom: 40px;
+}
+
+.rms-text__empty span {
+  color: #9e9e9e !important;
+  font-size: 1rem !important;
+  font-weight: normal !important;
+}
+
+.rms-text>span {
+  border-bottom: solid 1px #9e9e9e !important;
+}
+
+.rms-label {
+  color: #9e9e9e !important;
+}
+
 
 
 /* Navigation */

@@ -30,6 +30,8 @@ export const createProject = (project) => {
 export const editProject = (project) => {
   return (dispatch, getState, { getFirestore }) => {
     const { id, ...noIdProject } = project
+
+    console.log(noIdProject)
      // make async call to database
      const firestore = getFirestore()
      firestore.collection('projects').doc(project.id).update({

@@ -5,6 +5,8 @@ import { compose } from 'redux'
 import { editProject } from '../../store/actions/projectActions'
 import { Redirect } from 'react-router-dom'
 import { Editor } from '@tinymce/tinymce-react'
+import ReactMaterialSelect from 'react-material-select'
+import 'react-material-select/lib/css/reactMaterialSelect.css'
 
 class EditProject extends Component {
   state = {
@@ -12,7 +14,7 @@ class EditProject extends Component {
     title: this.props.project ? this.props.project.title : '',
     content: this.props.project ? this.props.project.content : 'Enter your Project here...',
     publish: this.props.project ? this.props.project.publish : false,
-    createdAt: this.props.project ? this.props.project.createdAt : null,
+    category: this.props.category ? this.props.project.category : ''
   }
 
 
@@ -21,13 +23,20 @@ class EditProject extends Component {
       id: nextProps.id,
       title: nextProps.project.title,
       content: nextProps.project.content,
-      publish: nextProps.project.publish
+      publish: nextProps.project.publish,
+      category: nextProps.project.category
     })
   }
 
   handleChange = (e) => {
     this.setState({
       [e.target.id]: e.target.value
+    })
+  }
+
+  handleSelect = (e) => {
+    this.setState({
+      category: e.value
     })
   }
 
@@ -43,7 +52,7 @@ class EditProject extends Component {
   }
 
   render() {
-    const { project, auth } = this.props
+    const { project, auth, categories } = this.props
     const apiKey = process.env.REACT_APP_TINY_MCE_API_KEY
     if (!auth.uid) { return <Redirect to='/signin' /> }
 
@@ -53,7 +62,10 @@ class EditProject extends Component {
           <p>You are not authorized to edit this project.</p>
         </div>
       )
-    } else if (project && (project.publish || (!(project.publish) && project.authorId === auth.uid))) {
+    } else if (project && categories && (project.publish || (!(project.publish) && project.authorId === auth.uid))) {
+      
+      let categoryKeys = Object.keys(categories)
+      
       return (
         <div className="container">
           <form onSubmit={this.handleSubmit} className="white">
@@ -67,6 +79,14 @@ class EditProject extends Component {
             <div className="input-field">
               <label htmlFor="title" className="active">Title</label>
               <input type="text" id="title" onChange={this.handleChange} defaultValue={this.state.title} />
+            </div>
+            <div className="input-field">
+              <ReactMaterialSelect label='Category' resetLabel={false} defaultValue={this.state.category} onChange={this.handleSelect}>
+                {categoryKeys.map(key => {
+                  return <option key={key} dataValue={key}>{categories[key].categoryName}</option>
+                })
+                }
+              </ReactMaterialSelect>
             </div>
 
             <Editor
@@ -109,7 +129,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     project: project,
     auth: state.firebase.auth,
-    id: id
+    id: id,
+    categories: state.firestore.data.categories
   }
 }
 
@@ -122,6 +143,6 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
   connect(
     mapStateToProps, mapDispatchToProps),
-  firestoreConnect([{ collection: 'projects' }]
+  firestoreConnect([{ collection: 'projects' }, { collection: 'categories' }]
   )
 )(EditProject)

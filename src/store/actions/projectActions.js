@@ -10,6 +10,14 @@ export const createProject = (project) => {
       authorLastName: profile.lastName,
       authorId: authorId,
       createdAt: new Date()
+    }).then((res) => {
+      firestore.collection('users').doc(authorId).update({
+        projects: firestore.FieldValue.arrayUnion(res.id)
+      })
+      firestore.collection('categories').doc(project.category).update({
+        categoryProjects: firestore.FieldValue.arrayUnion(res.id)
+      })
+      return
     }).then(() => {
       dispatch({type: 'CREATE_PROJECT', project})
     }).catch((err) => {

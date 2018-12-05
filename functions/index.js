@@ -32,16 +32,25 @@ exports.projectCreated = functions.firestore
 })
 
 
-exports.projectCreated = functions.firestore
+exports.projectUpdated = functions.firestore
   .document('projects/{projectId}')
   .onUpdate(doc => {
 
-    const project = doc.data()
+    const beforeProject = doc.before.data()
+    const afterProject = doc.after.data()
 
-    if (project.publish) {
+    if (beforeProject.publish && afterProject.publish) {
       const notification = {
         content: 'Updated a project',
-        user: `${project.authorFirstName} ${project.authorLastName}`,
+        user: `${afterProject.authorFirstName} ${afterProject.authorLastName}`,
+        time: admin.firestore.FieldValue.serverTimestamp()
+      }
+
+      return createNotification(notification)
+    } else if (afterProject.publish) {
+      const notification = {
+        content: 'Added a new project',
+        user: `${afterProject.authorFirstName} ${afterProject.authorLastName}`,
         time: admin.firestore.FieldValue.serverTimestamp()
       }
 

@@ -14,7 +14,7 @@ class EditProject extends Component {
     title: this.props.project ? this.props.project.title : '',
     content: this.props.project ? this.props.project.content : 'Enter your Project here...',
     publish: this.props.project ? this.props.project.publish : false,
-    category: this.props.category ? this.props.project.category : ''
+    category: this.props.project ? this.props.project.category : ''
   }
 
 

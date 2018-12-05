@@ -14,7 +14,8 @@ class EditProject extends Component {
     title: this.props.project ? this.props.project.title : '',
     content: this.props.project ? this.props.project.content : 'Enter your Project here...',
     publish: this.props.project ? this.props.project.publish : false,
-    category: this.props.project ? this.props.project.category : ''
+    category: this.props.project ? this.props.project.category : '',
+    prevCategory: this.props.project ? this.props.project.category : '',
   }
 
 
@@ -24,7 +25,8 @@ class EditProject extends Component {
       title: nextProps.project.title,
       content: nextProps.project.content,
       publish: nextProps.project.publish,
-      category: nextProps.project.category
+      category: nextProps.project.category,
+      prevCategory: nextProps.project.category
     })
   }
 

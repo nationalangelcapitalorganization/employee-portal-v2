@@ -29,14 +29,25 @@ export const createProject = (project) => {
 
 export const editProject = (project) => {
   return (dispatch, getState, { getFirestore }) => {
-    const { id, ...noIdProject } = project
+    const { id, prevCategory, ...noIdProject } = project
 
-    console.log(noIdProject)
      // make async call to database
      const firestore = getFirestore()
      firestore.collection('projects').doc(project.id).update({
       ...noIdProject,
       editedAt: new Date()
+    }).then(() => {
+      if (project.prevCategory === noIdProject.category) {
+        return
+      } else {
+        firestore.collection('categories').doc(project.prevCategory).update({
+          categoryProjects: firestore.FieldValue.arrayRemove(project.id)
+        })
+        firestore.collection('categories').doc(noIdProject.category).update({
+          categoryProjects: firestore.FieldValue.arrayUnion(project.id)
+        })
+        return
+      }
     }).then(() => {
       dispatch({ type: 'EDIT_PROJECT', project })
     }).catch((err) => {

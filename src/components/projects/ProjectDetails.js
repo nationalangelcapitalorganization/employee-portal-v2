@@ -8,8 +8,7 @@ import ReactHtmlParser from 'react-html-parser';
 import { Link } from 'react-router-dom'
 
 const ProjectDetails = (props) => {
-  const { project, auth, id } = props
-
+  const { project, auth, id, categories } = props
 
   let editProjectButton = null
 
@@ -25,17 +24,22 @@ const ProjectDetails = (props) => {
         <p>This project is not yet published.</p>
       </div>
     )
-  } else if (project && (project.publish || (!(project.publish) && project.authorId === auth.uid))) {
+  } else if (project && categories && (project.publish || (!(project.publish) && project.authorId === auth.uid))) {
+    const category = categories[project.category]
+    
     return (
       <div className="container section project-details">
         <div className="card z-depth-0">
           <div className="card-content">
             { editProjectButton }
             <span className="card-title">{project.title}</span>
+            <div className='details-category'>
+              <span className='grey-text'>Category: </span><span className={`${category.color}-text`}>{category.categoryName}</span>
+            </div>
             <p className="unpublished-container">{project.publish ? null : <span className="white-text pink lighten-1 unpublished">Not yet Published</span>}</p>
             <div>{ReactHtmlParser(project.content)}</div>
           </div>
-          <div className="card-action greyj lighten-4 grey-text">
+          <div className="card-action grey lighten-4 grey-text">
             <div>Posted by {project.authorFirstName} {project.authorLastName}</div>
             <div>{moment(project.createdAt.toDate()).calendar()}</div>
           </div>
@@ -58,13 +62,14 @@ const mapStateToProps = (state, ownProps) => {
   return {
     project: project,
     auth: state.firebase.auth,
-    id: id
+    id: id,
+    categories: state.firestore.data.categories
   }
 }
 
 export default compose(
   connect(mapStateToProps),
   firestoreConnect([
-    { collection: 'projects' }
+    { collection: 'projects' }, { collection: 'categories' }
   ])
 )(ProjectDetails)

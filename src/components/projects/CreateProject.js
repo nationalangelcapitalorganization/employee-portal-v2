@@ -52,7 +52,7 @@ class CreateProject extends Component {
 
       return (
         <div className="container">
-          <form onSubmit={this.handleSubmit} className="white">
+          <form onSubmit={this.handleSubmit} className="white project-form">
             <div className="switch right-align publish-switch">
               <label>Publish:
               <input id="publish" onChange={(e) => { this.setState({ publish: e.target.checked }) }} type="checkbox" />

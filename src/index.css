@@ -27,7 +27,7 @@ form {
   margin-top: 60px;
 }
 
-form .input-field {
+.project-form .input-field {
   margin: 0;
 }
 
@@ -111,4 +111,10 @@ form h5 {
 
 .unpublished {
   padding: 3px 5px;
+}
+
+/* Details Page */
+
+.details-category {
+  margin: 10px 20px 15px 20px;
 }

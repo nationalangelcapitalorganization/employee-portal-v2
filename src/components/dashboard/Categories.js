@@ -1,18 +1,23 @@
 import React from "react"
-import { Link } from 'react-router-dom'
 
 const Categories = (props) => {
-  const { categories } = props
+  const { categories, categoryChanger } = props
   return (
     <div className="section">
       <div className="card z-depth-0">
         <div className="card-content">
           <span className="card-title">Categories</span>
           <ul className="categories">
+            <li><a href='#!' onClick={() => {
+              categoryChanger('', 'All Projects', 'pink')
+            }} className='pink-text'>All Projects</a>
+            </li>
             {categories && categories.map(item => {
               return (
                 <li key={item.id}>
-                  <Link to='#' className={`${item.color}-text`}>{item.categoryName}</Link>
+                  <a href='#!' onClick={() => { 
+                    categoryChanger(item.id, item.categoryName, item.color)
+                    }} className={`${item.color}-text`}>{item.categoryName}</a>
                 </li>
               )
             })}

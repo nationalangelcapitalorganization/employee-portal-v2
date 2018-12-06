@@ -96,7 +96,7 @@ class EditProject extends Component {
               apiKey={apiKey}
               initialValue={this.state.content}
               init={{
-                plugins: ['advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
+                plugins: ['advlist autolink link image lists charmap print preview hr anchor pagebreak',
                   'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
                   'save table contextmenu directionality emoticons template paste textcolor'],
                 toolbar: 'formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview',

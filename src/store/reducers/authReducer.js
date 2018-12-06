@@ -10,6 +10,12 @@ const authReducer = (state = initState, action) => {
         ...state,
         authError: 'Login Failed'
       }
+    case 'LOGIN_NOT_AUTHORIZED':
+      console.log('login unauthorized')
+      return {
+        ...state,
+        authError: 'Login only authorized for NACO Staff'
+      }
     case 'LOGIN_SUCCESS':
       console.log('login success')
       return {
@@ -30,6 +36,12 @@ const authReducer = (state = initState, action) => {
       return {
         ...state,
         authError: action.err.message
+      }
+    case 'SIGNUP_NOT_AUTHORIZED':
+      console.log('signup not authorized')
+      return {
+        ...state,
+        authError: 'Signup only authorized for NACO Staff'
       }
     default:
       return state

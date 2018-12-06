@@ -63,6 +63,6 @@ export default compose(
   firestoreConnect([
     { collection: 'projects', orderBy: ['createdAt', 'desc'] },
     { collection: 'notifications', limit: 3, orderBy: ['time', 'desc'] },
-    { collection: 'categories', orderBy: ['categoryName'] }
+    { collection: 'categories', orderBy: ['categoryName', 'asc'] }
   ])
 )(Dashboard)

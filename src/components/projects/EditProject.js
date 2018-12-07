@@ -1,23 +1,25 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { firestoreConnect } from 'react-redux-firebase'
-import { compose } from 'redux'
-import { editProject } from '../../store/actions/projectActions'
-import { Redirect } from 'react-router-dom'
-import { Editor } from '@tinymce/tinymce-react'
-import ReactMaterialSelect from 'react-material-select'
-import 'react-material-select/lib/css/reactMaterialSelect.css'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+import { editProject } from "../../store/actions/projectActions";
+import { Redirect } from "react-router-dom";
+import { Editor } from "@tinymce/tinymce-react";
+import ReactMaterialSelect from "react-material-select";
+import "react-material-select/lib/css/reactMaterialSelect.css";
+import { Modal, Button } from "react-materialize";
 
 class EditProject extends Component {
   state = {
-    id: this.props.id ? this.props.id : '',
-    title: this.props.project ? this.props.project.title : '',
-    content: this.props.project ? this.props.project.content : 'Enter your Project here...',
+    id: this.props.id ? this.props.id : "",
+    title: this.props.project ? this.props.project.title : "",
+    content: this.props.project
+      ? this.props.project.content
+      : "Enter your Project here...",
     publish: this.props.project ? this.props.project.publish : false,
-    category: this.props.project ? this.props.project.category : '',
-    prevCategory: this.props.project ? this.props.project.category : '',
-  }
-
+    category: this.props.project ? this.props.project.category : "",
+    prevCategory: this.props.project ? this.props.project.category : ""
+  };
 
   componentWillReceiveProps(nextProps) {
     this.setState({
@@ -27,79 +29,117 @@ class EditProject extends Component {
       publish: nextProps.project.publish,
       category: nextProps.project.category,
       prevCategory: nextProps.project.category
-    })
+    });
   }
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       [e.target.id]: e.target.value
-    })
-  }
+    });
+  };
 
-  handleSelect = (e) => {
+  handleSelect = e => {
     this.setState({
       category: e.value
-    })
-  }
+    });
+  };
 
-  handleEditorChange = (e) => {
-    const content = e.target.getContent()
+  handleEditorChange = e => {
+    const content = e.target.getContent();
     this.setState({ content: content });
-  }
+  };
 
-  handleSubmit = (e) => {
-    e.preventDefault()
-    this.props.editProject(this.state)
-    this.props.history.push('/')
-  }
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.editProject(this.state);
+    this.props.history.push("/");
+  };
+
+  handlePublish = async e => {
+    e.preventDefault();
+    await this.setState({publish: true})
+    this.handleSubmit(e)
+  };
+
 
   render() {
-    const { project, auth, categories } = this.props
-    const apiKey = process.env.REACT_APP_TINY_MCE_API_KEY
-    if (!auth.uid) { return <Redirect to='/signin' /> }
+    const { project, auth, categories } = this.props;
+    const apiKey = process.env.REACT_APP_TINY_MCE_API_KEY;
+    if (!auth.uid) {
+      return <Redirect to="/signin" />;
+    }
 
     if (project && project.authorId !== auth.uid) {
       return (
         <div className="container center">
           <p>You are not authorized to edit this project.</p>
         </div>
-      )
-    } else if (project && categories && (project.publish || (!(project.publish) && project.authorId === auth.uid))) {
-      
-      let categoryKeys = Object.keys(categories)
-      
+      );
+    } else if (
+      project &&
+      categories &&
+      (project.publish || (!project.publish && project.authorId === auth.uid))
+    ) {
+      let categoryKeys = Object.keys(categories);
+
       return (
         <div className="container">
-          <form onSubmit={this.handleSubmit} className="white project-form">
+          <form className="white project-form">
             <div className="switch right-align publish-switch">
-              <label>Publish:
-              <input id="publish" defaultChecked={this.state.publish} onChange={(e) => { this.setState({ publish: e.target.checked }) }} type="checkbox" />
-                <span className="lever"></span>
+              <label>
+                Publish:
+                <input
+                  id="publish"
+                  defaultChecked={this.state.publish}
+                  onChange={e => {
+                    this.setState({ publish: e.target.checked });
+                  }}
+                  type="checkbox"
+                />
+                <span className="lever" />
               </label>
             </div>
             <h5 className="grey-text text-darken-3">Edit Project</h5>
             <div className="input-field">
-              <label htmlFor="title" className="active">Title</label>
-              <input type="text" id="title" onChange={this.handleChange} defaultValue={this.state.title} />
+              <label htmlFor="title" className="active">
+                Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                onChange={this.handleChange}
+                defaultValue={this.state.title}
+              />
             </div>
             <div className="input-field">
-              <ReactMaterialSelect label='Category' resetLabel={false} defaultValue={this.state.category} onChange={this.handleSelect}>
+              <ReactMaterialSelect
+                label="Category"
+                resetLabel={false}
+                defaultValue={this.state.category}
+                onChange={this.handleSelect}
+              >
                 {categoryKeys.map(key => {
-                  return <option key={key} dataValue={key}>{categories[key].categoryName}</option>
-                })
-                }
+                  return (
+                    <option key={key} dataValue={key}>
+                      {categories[key].categoryName}
+                    </option>
+                  );
+                })}
               </ReactMaterialSelect>
             </div>
 
             <Editor
-              id='content'
+              id="content"
               apiKey={apiKey}
               initialValue={this.state.content}
               init={{
-                plugins: ['advlist autolink link image lists charmap print preview hr anchor pagebreak',
-                  'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                  'save table contextmenu directionality emoticons template paste textcolor'],
-                toolbar: 'formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview',
+                plugins: [
+                  "advlist autolink link image lists charmap print preview hr anchor pagebreak",
+                  "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                  "save table contextmenu directionality emoticons template paste textcolor"
+                ],
+                toolbar:
+                  "formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview",
                 branding: false,
                 height: 400,
                 inline: true
@@ -108,43 +148,62 @@ class EditProject extends Component {
             />
 
             <div className="input-field">
-              <button className="btn pink lighten-1 z-depth-0">Update</button>
+            { this.state.publish ? <Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0">
+                    Update
+                  </Button> : <Modal
+                trigger={
+                  <Button className="btn pink lighten-1 z-depth-0">
+                    Update
+                  </Button>
+                }
+                header='Would you like to publish?'
+                actions={<div><Button onClick={this.handlePublish} className="btn z-depth-0 yes-button">
+                Yes
+              </Button>
+              <Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0">
+               No
+              </Button></div>}
+              >
+                <p>
+                  Would you like to publish this project as well?
+                </p>
+              </Modal> }
             </div>
           </form>
         </div>
-      )
-
+      );
     } else {
       return (
         <div className="container center">
           <p>Loading Project...</p>
         </div>
-      )
+      );
     }
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const id = ownProps.match.params.id
-  const projects = state.firestore.data.projects
-  const project = projects ? projects[id] : null
+  const id = ownProps.match.params.id;
+  const projects = state.firestore.data.projects;
+  const project = projects ? projects[id] : null;
   return {
     project: project,
     auth: state.firebase.auth,
     id: id,
     categories: state.firestore.data.categories
-  }
-}
+  };
+};
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    editProject: (project) => dispatch(editProject(project))
-  }
-}
+    editProject: project => dispatch(editProject(project))
+  };
+};
 
 export default compose(
   connect(
-    mapStateToProps, mapDispatchToProps),
-  firestoreConnect([{ collection: 'projects' }, { collection: 'categories' }]
-  )
-)(EditProject)
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  firestoreConnect([{ collection: "projects" }, { collection: "categories" }])
+)(EditProject);

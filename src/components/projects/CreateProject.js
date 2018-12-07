@@ -7,7 +7,7 @@ import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import ReactMaterialSelect from 'react-material-select'
 import 'react-material-select/lib/css/reactMaterialSelect.css'
-
+import { Modal, Button } from "react-materialize";
 
 class CreateProject extends Component {
   state = {
@@ -40,19 +40,25 @@ class CreateProject extends Component {
     this.props.history.push('/')
   }
 
+  handlePublish = async e => {
+    e.preventDefault();
+    await this.setState({publish: true})
+    this.handleSubmit(e)
+  };
+
   render() {
     const { auth, categories } = this.props
     const apiKey = process.env.REACT_APP_TINY_MCE_API_KEY
-    
+
     if (!auth.uid) { return <Redirect to='/signin' /> }
-    
+
     if (categories) {
 
       let categoryKeys = Object.keys(categories)
 
       return (
         <div className="container">
-          <form onSubmit={this.handleSubmit} className="white project-form">
+          <form className="white project-form">
             <div className="switch right-align publish-switch">
               <label>Publish:
               <input id="publish" onChange={(e) => { this.setState({ publish: e.target.checked }) }} type="checkbox" />
@@ -60,7 +66,7 @@ class CreateProject extends Component {
               </label>
             </div>
             <h5 className="grey-text text-darken-3">Create a New Project</h5>
-            
+
             <div className="input-field">
               <label htmlFor="title">Title</label>
               <input type="text" id="title" onChange={this.handleChange} />
@@ -91,7 +97,26 @@ class CreateProject extends Component {
             />
 
             <div className="input-field">
-              <button className="btn pink lighten-1 z-depth-0">Save</button>
+            { this.state.publish ? <Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0">
+                    Save
+                  </Button> : <Modal
+                trigger={
+                  <Button className="btn pink lighten-1 z-depth-0">
+                    Save
+                  </Button>
+                }
+                header='Would you like to publish?'
+                actions={<div><Button onClick={this.handlePublish} className="btn z-depth-0 yes-button">
+                Yes
+              </Button>
+              <Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0">
+               No
+              </Button></div>}
+              >
+                <p>
+                  Would you like to publish this project as well?
+                </p>
+              </Modal> }
             </div>
           </form>
         </div>

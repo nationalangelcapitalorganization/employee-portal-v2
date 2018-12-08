@@ -9,16 +9,16 @@ const createNotification = (notification => {
     .then(doc => console.log('notification added', doc))
 })
 
-exports.projectCreated = functions.firestore
-  .document('projects/{projectId}')
+exports.articleCreated = functions.firestore
+  .document('articles/{articleId}')
   .onCreate(doc => {
 
-    const project = doc.data()
+    const article = doc.data()
 
-    if (project.publish) {
+    if (article.publish) {
       const notification = {
-        content: 'added a new project',
-        user: `${project.authorFirstName} ${project.authorLastName}`,
+        content: 'added a new article',
+        user: `${article.authorFirstName} ${article.authorLastName}`,
         time: admin.firestore.FieldValue.serverTimestamp()
       }
 
@@ -29,25 +29,25 @@ exports.projectCreated = functions.firestore
 })
 
 
-exports.projectUpdated = functions.firestore
-  .document('projects/{projectId}')
+exports.articleUpdated = functions.firestore
+  .document('articles/{articleId}')
   .onUpdate(doc => {
 
-    const beforeProject = doc.before.data()
-    const afterProject = doc.after.data()
+    const beforeArticle = doc.before.data()
+    const afterArticle = doc.after.data()
 
-    if (beforeProject.publish && afterProject.publish) {
+    if (beforeArticle.publish && afterArticle.publish) {
       const notification = {
-        content: 'updated a project',
-        user: `${afterProject.authorFirstName} ${afterProject.authorLastName}`,
+        content: 'updated an article',
+        user: `${afterArticle.authorFirstName} ${afterArticle.authorLastName}`,
         time: admin.firestore.FieldValue.serverTimestamp()
       }
 
       return createNotification(notification)
-    } else if (afterProject.publish) {
+    } else if (afterArticle.publish) {
       const notification = {
-        content: 'added a new project',
-        user: `${afterProject.authorFirstName} ${afterProject.authorLastName}`,
+        content: 'added a new article',
+        user: `${afterArticle.authorFirstName} ${afterArticle.authorLastName}`,
         time: admin.firestore.FieldValue.serverTimestamp()
       }
 
@@ -60,7 +60,7 @@ exports.projectUpdated = functions.firestore
 
 exports.userJoined = functions.auth.user()
   .onCreate(user => {
-    
+
     return admin.firestore().collection('users')
       .doc(user.uid).get().then(doc => {
 

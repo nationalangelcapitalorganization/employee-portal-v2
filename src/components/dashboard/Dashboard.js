@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import Notifications from "./Notifications"
-import Categories from "./Categories"
-import ProjectList from '../projects/ProjectList'
+import Departments from "./Departments"
+import ArticleList from '../articles/ArticleList'
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
@@ -10,24 +10,24 @@ import { Redirect } from 'react-router-dom'
 class Dashboard extends Component {
 
   state = {
-    currentCategory: '',
-    currentCategoryName: 'All Projects',
-    currentCategoryColor: 'pink'
+    currentDepartment: '',
+    currentDepartmentName: 'All Articles',
+    currentDepartmentColor: 'pink'
   }
 
-  changeCategory = (categoryId, categoryName, categoryColor) => {
-    this.setState({currentCategory: categoryId, currentCategoryName: categoryName, currentCategoryColor: categoryColor})
+  changeDepartment = (departmentId, departmentName, departmentColor) => {
+    this.setState({currentDepartment: departmentId, currentDepartmentName: departmentName, currentDepartmentColor: departmentColor})
   }
 
   render() {
 
-    const { projects, auth, notifications, categories } = this.props
+    const { articles, auth, notifications, departments } = this.props
     if (!auth.uid) { return <Redirect to='/signin' /> }
 
-    let projectProps = projects
+    let articleProps = articles
 
-    if (this.state.currentCategory !== '') {
-      projectProps = projectProps.filter(project => project.category === this.state.currentCategory)
+    if (this.state.currentDepartment !== '') {
+      articleProps = articleProps.filter(article => article.department === this.state.currentDepartment)
     }
 
     return (
@@ -35,13 +35,13 @@ class Dashboard extends Component {
         <div className="row">
           <div className="col s12 m6">
             <div>
-              <h2 className={`${this.state.currentCategoryColor} lighten-1 white-text dashboard-category-title`}>{this.state.currentCategoryName}</h2>
+              <h2 className={`${this.state.currentDepartmentColor}-text text-darken-3 dashboard-department-title`}>{this.state.currentDepartmentName}</h2>
             </div>
-            <ProjectList projects={projectProps} categories={categories} auth={auth} />
+            <ArticleList articles={articleProps} departments={departments} auth={auth} />
           </div>
           <div className="col s12 m5 offset-m1">
             <Notifications notifications={notifications} />
-            <Categories categories={categories} categoryChanger={this.changeCategory} />
+            <Departments departments={departments} departmentChanger={this.changeDepartment} />
           </div>
         </div>
       </div>
@@ -51,18 +51,18 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    projects: state.firestore.ordered.projects,
+    articles: state.firestore.ordered.articles,
     auth: state.firebase.auth,
     notifications: state.firestore.ordered.notifications,
-    categories: state.firestore.ordered.categories
+    departments: state.firestore.ordered.departments
   }
 }
 
 export default compose(
   connect(mapStateToProps),
   firestoreConnect([
-    { collection: 'projects', orderBy: ['createdAt', 'desc'] },
+    { collection: 'articles', orderBy: ['createdAt', 'desc'] },
     { collection: 'notifications', limit: 3, orderBy: ['time', 'desc'] },
-    { collection: 'categories', orderBy: ['categoryName', 'asc'] }
+    { collection: 'departments', orderBy: ['departmentName', 'asc'] }
   ])
 )(Dashboard)

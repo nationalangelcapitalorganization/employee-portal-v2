@@ -2,33 +2,33 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
-import { editProject } from "../../store/actions/projectActions";
+import { editArticle } from "../../store/actions/articleActions";
 import { Redirect } from "react-router-dom";
 import { Editor } from "@tinymce/tinymce-react";
 import ReactMaterialSelect from "react-material-select";
 import "react-material-select/lib/css/reactMaterialSelect.css";
 import { Modal, Button } from "react-materialize";
 
-class EditProject extends Component {
+class EditArticle extends Component {
   state = {
     id: this.props.id ? this.props.id : "",
-    title: this.props.project ? this.props.project.title : "",
-    content: this.props.project
-      ? this.props.project.content
-      : "Enter your Project here...",
-    publish: this.props.project ? this.props.project.publish : false,
-    category: this.props.project ? this.props.project.category : "",
-    prevCategory: this.props.project ? this.props.project.category : ""
+    title: this.props.article ? this.props.article.title : "",
+    content: this.props.article
+      ? this.props.article.content
+      : "Enter your Article here...",
+    publish: this.props.article ? this.props.article.publish : false,
+    department: this.props.article ? this.props.article.department : "",
+    prevDepartment: this.props.article ? this.props.article.department : ""
   };
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       id: nextProps.id,
-      title: nextProps.project.title,
-      content: nextProps.project.content,
-      publish: nextProps.project.publish,
-      category: nextProps.project.category,
-      prevCategory: nextProps.project.category
+      title: nextProps.article.title,
+      content: nextProps.article.content,
+      publish: nextProps.article.publish,
+      department: nextProps.article.department,
+      prevDepartment: nextProps.article.department
     });
   }
 
@@ -40,7 +40,7 @@ class EditProject extends Component {
 
   handleSelect = e => {
     this.setState({
-      category: e.value
+      department: e.value
     });
   };
 
@@ -51,7 +51,7 @@ class EditProject extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.editProject(this.state);
+    this.props.editArticle(this.state);
     this.props.history.push("/");
   };
 
@@ -63,28 +63,28 @@ class EditProject extends Component {
 
 
   render() {
-    const { project, auth, categories } = this.props;
+    const { article, auth, departments } = this.props;
     const apiKey = process.env.REACT_APP_TINY_MCE_API_KEY;
     if (!auth.uid) {
       return <Redirect to="/signin" />;
     }
 
-    if (project && project.authorId !== auth.uid) {
+    if (article && article.authorId !== auth.uid) {
       return (
         <div className="container center">
-          <p>You are not authorized to edit this project.</p>
+          <p>You are not authorized to edit this article.</p>
         </div>
       );
     } else if (
-      project &&
-      categories &&
-      (project.publish || (!project.publish && project.authorId === auth.uid))
+      article &&
+      departments &&
+      (article.publish || (!article.publish && article.authorId === auth.uid))
     ) {
-      let categoryKeys = Object.keys(categories);
+      let departmentKeys = Object.keys(departments);
 
       return (
         <div className="container">
-          <form className="white project-form">
+          <form className="white article-form">
             <div className="switch right-align publish-switch">
               <label>
                 Publish:
@@ -99,7 +99,7 @@ class EditProject extends Component {
                 <span className="lever" />
               </label>
             </div>
-            <h5 className="grey-text text-darken-3">Edit Project</h5>
+            <h5 className="grey-text text-darken-3">Edit Article</h5>
             <div className="input-field">
               <label htmlFor="title" className="active">
                 Title
@@ -113,15 +113,15 @@ class EditProject extends Component {
             </div>
             <div className="input-field">
               <ReactMaterialSelect
-                label="Category"
+                label="Department"
                 resetLabel={false}
-                defaultValue={this.state.category}
+                defaultValue={this.state.department}
                 onChange={this.handleSelect}
               >
-                {categoryKeys.map(key => {
+                {departmentKeys.map(key => {
                   return (
                     <option key={key} dataValue={key}>
-                      {categories[key].categoryName}
+                      {departments[key].departmentName}
                     </option>
                   );
                 })}
@@ -165,7 +165,7 @@ class EditProject extends Component {
               </Button></div>}
               >
                 <p>
-                  Would you like to publish this project as well?
+                  Would you like to publish this article as well?
                 </p>
               </Modal> }
             </div>
@@ -175,7 +175,7 @@ class EditProject extends Component {
     } else {
       return (
         <div className="container center">
-          <p>Loading Project...</p>
+          <p>Loading Article...</p>
         </div>
       );
     }
@@ -184,19 +184,19 @@ class EditProject extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.match.params.id;
-  const projects = state.firestore.data.projects;
-  const project = projects ? projects[id] : null;
+  const articles = state.firestore.data.articles;
+  const article = articles ? articles[id] : null;
   return {
-    project: project,
+    article: article,
     auth: state.firebase.auth,
     id: id,
-    categories: state.firestore.data.categories
+    departments: state.firestore.data.departments
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    editProject: project => dispatch(editProject(project))
+    editArticle: article => dispatch(editArticle(article))
   };
 };
 
@@ -205,5 +205,5 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps
   ),
-  firestoreConnect([{ collection: "projects" }, { collection: "categories" }])
-)(EditProject);
+  firestoreConnect([{ collection: "articles" }, { collection: "departments" }])
+)(EditArticle);

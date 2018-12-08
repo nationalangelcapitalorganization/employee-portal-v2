@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { createProject } from '../../store/actions/projectActions'
+import { createArticle } from '../../store/actions/articleActions'
 import { Redirect } from 'react-router-dom'
 import { Editor } from '@tinymce/tinymce-react'
 import { compose } from 'redux'
@@ -9,11 +9,11 @@ import ReactMaterialSelect from 'react-material-select'
 import 'react-material-select/lib/css/reactMaterialSelect.css'
 import { Modal, Button } from "react-materialize";
 
-class CreateProject extends Component {
+class CreateArticle extends Component {
   state = {
     title: '',
-    category: '',
-    content: 'Enter your Project here...',
+    department: '',
+    content: 'Enter your Article here...',
     publish: false
   }
 
@@ -25,7 +25,7 @@ class CreateProject extends Component {
 
   handleSelect = (e) => {
     this.setState({
-      category: e.value
+      department: e.value
     })
   }
 
@@ -36,7 +36,7 @@ class CreateProject extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    this.props.createProject(this.state)
+    this.props.createArticle(this.state)
     this.props.history.push('/')
   }
 
@@ -47,34 +47,34 @@ class CreateProject extends Component {
   };
 
   render() {
-    const { auth, categories } = this.props
+    const { auth, departments } = this.props
     const apiKey = process.env.REACT_APP_TINY_MCE_API_KEY
 
     if (!auth.uid) { return <Redirect to='/signin' /> }
 
-    if (categories) {
+    if (departments) {
 
-      let categoryKeys = Object.keys(categories)
+      let departmentKeys = Object.keys(departments)
 
       return (
         <div className="container">
-          <form className="white project-form">
+          <form className="white article-form">
             <div className="switch right-align publish-switch">
               <label>Publish:
               <input id="publish" onChange={(e) => { this.setState({ publish: e.target.checked }) }} type="checkbox" />
                 <span className="lever"></span>
               </label>
             </div>
-            <h5 className="grey-text text-darken-3">Create a New Project</h5>
+            <h5 className="grey-text text-darken-3">Create a New Article</h5>
 
             <div className="input-field">
               <label htmlFor="title">Title</label>
               <input type="text" id="title" onChange={this.handleChange} />
             </div>
             <div className="input-field">
-              <ReactMaterialSelect label='Category' resetLabel={false} defaultValue="" onChange={this.handleSelect}>
-                {categoryKeys.map(key => {
-                  return <option key={key} dataValue={key}>{categories[key].categoryName}</option>
+              <ReactMaterialSelect label='Department' resetLabel={false} defaultValue="" onChange={this.handleSelect}>
+                {departmentKeys.map(key => {
+                  return <option key={key} dataValue={key}>{departments[key].departmentName}</option>
                 })
                 }
               </ReactMaterialSelect>
@@ -114,7 +114,7 @@ class CreateProject extends Component {
               </Button></div>}
               >
                 <p>
-                  Would you like to publish this project as well?
+                  Would you like to publish this article as well?
                 </p>
               </Modal> }
             </div>
@@ -134,19 +134,19 @@ class CreateProject extends Component {
 const mapStateToProps = (state) => {
   return {
     auth: state.firebase.auth,
-    categories: state.firestore.data.categories
+    departments: state.firestore.data.departments
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createProject: (project) => dispatch(createProject(project))
+    createArticle: (article) => dispatch(createArticle(article))
   }
 }
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   firestoreConnect([
-    { collection: 'categories' }
+    { collection: 'departments' }
   ])
-)(CreateProject)
+)(CreateArticle)

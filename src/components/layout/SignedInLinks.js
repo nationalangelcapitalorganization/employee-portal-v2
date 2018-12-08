@@ -25,9 +25,9 @@ class SignedInLinks extends Component {
       <div>
         <a href="#!" data-target="slide-out" className="sidenav-trigger"><i className="material-icons">menu</i></a>
         <ul className="right hide-on-med-and-down">
-          <li><NavLink to='/create'>New Project</NavLink></li>
+          <li><NavLink to='/create'>New Article</NavLink></li>
           <li><a href="#!" onClick={this.props.signOut}>Log Out</a></li>
-          <li><NavLink to='/' className='btn btn-floating pink lighten-1'>{this.props.profile.initials}</NavLink></li>
+          <li><NavLink to='/userarticles' className='btn btn-floating pink lighten-1'>{this.props.profile.initials}</NavLink></li>
         </ul>
 
         <ul className="sidenav signedIn-sidenav" id="slide-out">
@@ -36,23 +36,23 @@ class SignedInLinks extends Component {
               <div className="background">
                 <img src="/img/nav-mobile-top-bg.jpg" alt="Office Buildings" />
               </div>
-              <NavLink to='/' className='btn btn-floating pink lighten-1 sidenav-close'>{this.props.profile.initials}</NavLink>
+              <NavLink to='/userarticles' className='btn btn-floating pink lighten-1 sidenav-close'>{this.props.profile.initials}</NavLink>
               <span className="white-text pink lighten-1 badge">{this.props.profile.firstName} {this.props.profile.lastName}</span>
               <span className="white-text pink lighten-1 badge">{this.props.email}</span>
             </div>
           </li>
-          <li><NavLink to='/create' className="sidenav-close">New Project</NavLink></li>
+          <li><NavLink to='/create' className="sidenav-close">New Article</NavLink></li>
           <li><a href="#!" onClick={this.props.signOut} className="sidenav-close">Log Out</a></li>
         </ul>
     </div>
           )
         }
       }
-      
+
 const mapDispatchToProps = (dispatch) => {
   return {
             signOut: () => dispatch(signOut())
         }
       }
-      
+
 export default connect(null, mapDispatchToProps)(SignedInLinks)

@@ -1,5 +1,6 @@
 import React, { Component } from "react"
-import UserArticleList from '../articles/UserArticleList'
+import UserArticleList from './UserArticleList'
+import {removeArticle} from '../../store/actions/articleActions'
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
@@ -9,7 +10,8 @@ class UserArticleDashboard extends Component {
 
   render() {
 
-    const { articles, auth, departments } = this.props
+    const { articles, auth, departments, removeArticle } = this.props
+
     if (!auth.uid) { return <Redirect to='/signin' /> }
 
     if (articles) {
@@ -19,9 +21,9 @@ class UserArticleDashboard extends Component {
         <div className="dashboard container">
           <h2 className='grey-text text-darken-3 dashboard-department-title'>Your Articles</h2>
           <h5 className='pink white-text darken-3 dashboard-department-title'>To Be Published:</h5>
-          <UserArticleList articles={unPublishedArticles} departments={departments} auth={auth} />
+          <UserArticleList removeArticle={removeArticle} articles={unPublishedArticles} departments={departments} auth={auth} />
           <h5 className='cyan white-text darken-3 dashboard-department-title'>Published:</h5>
-          <UserArticleList articles={publishedArticles} departments={departments} auth={auth} />
+          <UserArticleList removeArticle={removeArticle} articles={publishedArticles} departments={departments} auth={auth} />
         </div>
       )
     } else {
@@ -42,8 +44,14 @@ const mapStateToProps = (state) => {
   }
 }
 
+const mapDispatchToProps = dispatch => {
+  return {
+    removeArticle: article => dispatch(removeArticle(article))
+  };
+};
+
 export default compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   firestoreConnect([
     { collection: 'articles', orderBy: ['createdAt', 'desc'] },
     { collection: 'departments', orderBy: ['departmentName', 'asc'] }

@@ -26,7 +26,7 @@ exports.articleCreated = functions.firestore
 
     } else { return null }
 
-})
+  })
 
 
 exports.articleUpdated = functions.firestore
@@ -75,6 +75,11 @@ exports.userJoined = functions.auth.user()
 
       })
 
-})
+  })
 
 
+exports.imageUpload = functions.https.onRequest((request, response) => {
+  console.log('this is a request', request.body)
+  response.set('Access-Control-Allow-Origin', '*')
+  response.send(JSON.stringify({ location: 'https://d3lut3gzcpx87s.cloudfront.net/image_encoded/aHR0cHM6Ly9zaWxrc3RhcnQuczMuYW1hem9uYXdzLmNvbS83MThkNmY1OC00NzI1LTQzNmEtYTcyZi03M2EzYzc0ZDJkM2QucG5n/540x100fPNG' }));
+});

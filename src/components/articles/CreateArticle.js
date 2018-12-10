@@ -109,7 +109,8 @@ class CreateArticle extends Component {
                   toolbar: 'formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview',
                   branding: false,
                   height: 400,
-                  inline: true
+                  inline: true,
+                  images_upload_url: 'https://us-central1-naco-employee-portal.cloudfunctions.net/imageUpload'
                 }}
                 onChange={this.handleEditorChange}
               />

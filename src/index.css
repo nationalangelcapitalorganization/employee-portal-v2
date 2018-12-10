@@ -83,6 +83,11 @@ form h5 {
   margin-right: 5px !important;
 }
 
+.validation-text {
+  color: red;
+  font-size: 0.8rem;
+}
+
 
 /* Navigation */
 

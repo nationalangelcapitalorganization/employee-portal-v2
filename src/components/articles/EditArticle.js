@@ -18,7 +18,8 @@ class EditArticle extends Component {
       : "Enter your Article here...",
     publish: this.props.article ? this.props.article.publish : false,
     department: this.props.article ? this.props.article.department : "",
-    prevDepartment: this.props.article ? this.props.article.department : ""
+    prevDepartment: this.props.article ? this.props.article.department : "",
+    errors: {}
   };
 
   componentWillReceiveProps(nextProps) {
@@ -51,7 +52,23 @@ class EditArticle extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.editArticle(this.state);
+
+    const { errors, ...submission } = this.state
+    let error = false
+    for (let item in submission) {
+      if (submission[item] === '') {
+        this.setState((prevState) => ({ errors: { ...prevState.errors, [item]: `Please input ${item === 'content' ? 'some content' : `a ${item}`}` } }))
+        error = true
+      } else {
+        this.setState((prevState) => ({ errors: { ...prevState.errors, [item]: '' } }))
+      }
+    }
+    if (error) {
+      this.setState((prevState) => ({ errors: { ...prevState.errors, general: 'There were errors in your submission. Please review your article and try again.' } }))
+      return
+    }
+
+    this.props.editArticle(submission);
     this.props.history.push("/");
   };
 
@@ -110,6 +127,7 @@ class EditArticle extends Component {
                 onChange={this.handleChange}
                 defaultValue={this.state.title}
               />
+              <span className="validation-text">{this.state.errors.title}</span>
             </div>
             <div className="input-field">
               <ReactMaterialSelect
@@ -126,41 +144,45 @@ class EditArticle extends Component {
                   );
                 })}
               </ReactMaterialSelect>
+              <span className="validation-text">{this.state.errors.department}</span>
             </div>
 
-            <Editor
-              id="content"
-              apiKey={apiKey}
-              initialValue={this.state.content}
-              init={{
-                plugins: [
-                  "advlist autolink link image lists charmap print preview hr anchor pagebreak",
-                  "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-                  "save table contextmenu directionality emoticons template paste textcolor"
-                ],
-                toolbar:
-                  "formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview",
-                branding: false,
-                height: 400,
-                inline: true
-              }}
-              onChange={this.handleEditorChange}
-            />
+            <div className="input-field">
+              <Editor
+                id="content"
+                apiKey={apiKey}
+                initialValue={this.state.content}
+                init={{
+                  plugins: [
+                    "advlist autolink link image lists charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                    "save table contextmenu directionality emoticons template paste textcolor"
+                  ],
+                  toolbar:
+                    "formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview",
+                  branding: false,
+                  height: 400,
+                  inline: true
+                }}
+                onChange={this.handleEditorChange}
+              />
+              <span className="validation-text">{this.state.errors.content}</span>
+            </div>
 
             <div className="input-field">
-            { this.state.publish ? <Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0">
+            { this.state.publish ? <div><Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0">
                     Update
-                  </Button> : <Modal
+                  </Button></div> : <Modal
                 trigger={
                   <Button className="btn pink lighten-1 z-depth-0">
                     Update
                   </Button>
                 }
                 header='Would you like to publish?'
-                actions={<div><Button onClick={this.handlePublish} className="btn z-depth-0 yes-button">
+                  actions={<div><Button onClick={this.handlePublish} className="btn z-depth-0 yes-button modal-close">
                 Yes
               </Button>
-              <Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0">
+                    <Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0 modal-close">
                No
               </Button></div>}
               >
@@ -168,6 +190,7 @@ class EditArticle extends Component {
                   Would you like to publish this article as well?
                 </p>
               </Modal> }
+              <span className="validation-text">{this.state.errors.general}</span>
             </div>
           </form>
         </div>

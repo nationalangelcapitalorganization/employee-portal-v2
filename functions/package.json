@@ -9,6 +9,7 @@
     "logs": "firebase functions:log"
   },
   "dependencies": {
+    "@google-cloud/storage": "^2.3.3",
     "axios": "^0.18.0",
     "cloudinary": "^1.13.2",
     "firebase-admin": "~6.0.0",

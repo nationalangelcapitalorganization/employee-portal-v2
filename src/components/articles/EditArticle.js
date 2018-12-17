@@ -156,7 +156,7 @@ class EditArticle extends Component {
                   plugins: [
                     "advlist autolink link image lists charmap print preview hr anchor pagebreak",
                     "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-                    "save table contextmenu directionality emoticons template paste textcolor"
+                    "save table contextmenu directionality emoticons paste textcolor"
                   ],
                   toolbar:
                     "formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview",

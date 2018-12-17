@@ -8,7 +8,7 @@ var config = {
   authDomain: "naco-employee-portal.firebaseapp.com",
   databaseURL: "https://naco-employee-portal.firebaseio.com",
   projectId: "naco-employee-portal",
-  storageBucket: "naco-employee-portal.appspot.com",
+  storageBucket: "gs://naco-employee-portal.appspot.com",
   messagingSenderId: "18841270613"
 };
 

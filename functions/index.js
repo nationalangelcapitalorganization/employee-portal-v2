@@ -1,8 +1,7 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const axios = require('axios')
-const cloudname = functions.config().cloudinary.cloudname;
-const uploadPreset = functions.config().cloudinary.uploadpreset;
+
+admin.initializeApp(functions.config().firebase)
 
 const createNotification = notification => {
   return admin
@@ -76,30 +75,32 @@ exports.userJoined = functions.auth.user().onCreate(user => {
 });
 
 exports.imageUpload = functions.https.onRequest((request, response) => {
+  response.set('Access-Control-Allow-Origin', "*")
+  response.set('Access-Control-Allow-Methods', 'GET, POST')
 
-  const file = request.body
-  let formData = {}
-  formData['file'] = file
-  formData['upload_preset'] = uploadPreset
+  const imageBuffer = request.body,
+    mimeType = 'image/jpeg',
+    fileName = 'Test.jpg'
 
-  axios({
-    url: `/${cloudname}/image/upload`,
-    baseURL: 'api.cloudinary.com/v1_1/',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    data: formData
-  }).then(res => {
-    console.log(res)
-  }).catch(err => {
-    console.error(err)
-  })
+  var bucket = admin.storage().bucket();
 
-  let data = {
-    location:
-      "https://d3lut3gzcpx87s.cloudfront.net/image_encoded/aHR0cHM6Ly9zaWxrc3RhcnQuczMuYW1hem9uYXdzLmNvbS83MThkNmY1OC00NzI1LTQzNmEtYTcyZi03M2EzYzc0ZDJkM2QucG5n/540x100fPNG"
-  };
-  response.set("Access-Control-Allow-Origin", "*");
-  response.send(JSON.stringify(data));
+  console.log('img buffer:', imageBuffer)
+  
+  // Upload the image to the bucket
+  var file = bucket.file('article-images/' + fileName);
+
+  file.save(imageBuffer, {
+    metadata: { contentType: mimeType },
+  }, ((error) => {
+
+    if (error) {
+      return response.status(500).send('Unable to upload the image.');
+    }
+      let data = {
+        location:
+          "https://d3lut3gzcpx87s.cloudfront.net/image_encoded/aHR0cHM6Ly9zaWxrc3RhcnQuczMuYW1hem9uYXdzLmNvbS83MThkNmY1OC00NzI1LTQzNmEtYTcyZi03M2EzYzc0ZDJkM2QucG5n/540x100fPNG"
+      };
+      return response.status(200).send(JSON.stringify(data));
+  }));
+
 });

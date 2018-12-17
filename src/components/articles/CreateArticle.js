@@ -105,12 +105,42 @@ class CreateArticle extends Component {
                 init={{
                   plugins: ['advlist autolink link image lists charmap print preview hr anchor pagebreak',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'save table contextmenu directionality emoticons template paste textcolor'],
+                    'save table contextmenu directionality emoticons paste textcolor'],
                   toolbar: 'formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview',
                   branding: false,
                   height: 400,
                   inline: true,
-                  images_upload_url: 'https://us-central1-naco-employee-portal.cloudfunctions.net/imageUpload'
+                  images_upload_url: 'https://us-central1-naco-employee-portal.cloudfunctions.net/imageUpload',
+                  images_upload_handler: function (blobInfo, success, failure) {
+                    var xhr, formData;
+
+                    xhr = new XMLHttpRequest();
+                    xhr.withCredentials = false;
+                    xhr.open('POST', 'https://us-central1-naco-employee-portal.cloudfunctions.net/imageUpload');
+
+                    xhr.onload = function () {
+                      var json;
+
+                      if (xhr.status !== 200) {
+                        failure('HTTP Error: ' + xhr.status);
+                        return;
+                      }
+
+                      json = JSON.parse(xhr.responseText);
+
+                      if (!json || typeof json.location != 'string') {
+                        failure('Invalid JSON: ' + xhr.responseText);
+                        return;
+                      }
+
+                      success(json.location);
+                    };
+
+                    formData = new FormData();
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                    xhr.send(formData);
+                  },
                 }}
                 onChange={this.handleEditorChange}
               />

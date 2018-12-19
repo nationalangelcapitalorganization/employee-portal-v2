@@ -6,7 +6,7 @@ const UserArticleList = ({ articles, auth, departments, removeArticle }) => {
   return (
     <div className="article-list section">
       {articles && articles.map(article => {
-        if (article.publish || (!(article.publish) && article.authorId === auth.uid)) {
+        if (article.authorId === auth.uid) {
           return (
             <UserArticleSummary key={article.id} removeArticle={removeArticle} article={article} departments={departments} />
           )

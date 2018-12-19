@@ -80,7 +80,7 @@ class EditArticle extends Component {
 
 
   render() {
-    const { article, auth, departments } = this.props;
+    const { article, auth, departments, firebase } = this.props;
     const apiKey = process.env.REACT_APP_TINY_MCE_API_KEY;
     if (!auth.uid) {
       return <Redirect to="/signin" />;
@@ -162,7 +162,19 @@ class EditArticle extends Component {
                     "formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview",
                   branding: false,
                   height: 400,
-                  inline: true
+                  inline: true,
+                  images_upload_handler: function (blobInfo, success, failure) {
+                    let blob = blobInfo.blob()
+                    firebase.uploadFile(('article_images/' + Date.now()), blob)
+                      .then(res => {
+                        res.uploadTaskSnapshot.ref.getDownloadURL().then(function (downloadURL) {
+                          success(downloadURL);
+                        });
+                      })
+                      .catch(err => {
+                        failure(err)
+                      })
+                  },
                 }}
                 onChange={this.handleEditorChange}
               />
@@ -213,7 +225,8 @@ const mapStateToProps = (state, ownProps) => {
     article: article,
     auth: state.firebase.auth,
     id: id,
-    departments: state.firestore.data.departments
+    departments: state.firestore.data.departments,
+    firebase: state.firebase
   };
 };
 

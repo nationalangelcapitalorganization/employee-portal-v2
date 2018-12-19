@@ -114,7 +114,14 @@ class CreateArticle extends Component {
                   images_upload_handler: function (blobInfo, success, failure) {   
                     let blob = blobInfo.blob()
                     firebase.uploadFile(('article_images/' + Date.now()), blob)
-                    success("https://d3lut3gzcpx87s.cloudfront.net/image_encoded/aHR0cHM6Ly9zaWxrc3RhcnQuczMuYW1hem9uYXdzLmNvbS83MThkNmY1OC00NzI1LTQzNmEtYTcyZi03M2EzYzc0ZDJkM2QucG5n/540x100fPNG") 
+                      .then(res => {
+                        res.uploadTaskSnapshot.ref.getDownloadURL().then(function (downloadURL) {
+                          success(downloadURL);
+                        });
+                      })
+                      .catch(err => {
+                        failure(err)
+                      })
                   },
                 }}
                 onChange={this.handleEditorChange}

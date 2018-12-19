@@ -9,6 +9,7 @@ import ReactMaterialSelect from 'react-material-select'
 import 'react-material-select/lib/css/reactMaterialSelect.css'
 import { Modal, Button } from "react-materialize";
 
+
 class CreateArticle extends Component {
   state = {
     title: '',
@@ -62,7 +63,7 @@ class CreateArticle extends Component {
   };
 
   render() {
-    const { auth, departments } = this.props
+    const { auth, departments, firebase } = this.props
     const apiKey = process.env.REACT_APP_TINY_MCE_API_KEY
 
     if (!auth.uid) { return <Redirect to='/signin' /> }
@@ -110,36 +111,10 @@ class CreateArticle extends Component {
                   branding: false,
                   height: 400,
                   inline: true,
-                  images_upload_url: 'https://us-central1-naco-employee-portal.cloudfunctions.net/imageUpload',
-                  images_upload_handler: function (blobInfo, success, failure) {
-                    var xhr, formData;
-
-                    xhr = new XMLHttpRequest();
-                    xhr.withCredentials = false;
-                    xhr.open('POST', 'https://us-central1-naco-employee-portal.cloudfunctions.net/imageUpload');
-
-                    xhr.onload = function () {
-                      var json;
-
-                      if (xhr.status !== 200) {
-                        failure('HTTP Error: ' + xhr.status);
-                        return;
-                      }
-
-                      json = JSON.parse(xhr.responseText);
-
-                      if (!json || typeof json.location != 'string') {
-                        failure('Invalid JSON: ' + xhr.responseText);
-                        return;
-                      }
-
-                      success(json.location);
-                    };
-
-                    formData = new FormData();
-                    formData.append('file', blobInfo.blob(), blobInfo.filename());
-
-                    xhr.send(formData);
+                  images_upload_handler: function (blobInfo, success, failure) {   
+                    let blob = blobInfo.blob()
+                    firebase.uploadFile(('article_images/' + Date.now()), blob)
+                    success("https://d3lut3gzcpx87s.cloudfront.net/image_encoded/aHR0cHM6Ly9zaWxrc3RhcnQuczMuYW1hem9uYXdzLmNvbS83MThkNmY1OC00NzI1LTQzNmEtYTcyZi03M2EzYzc0ZDJkM2QucG5n/540x100fPNG") 
                   },
                 }}
                 onChange={this.handleEditorChange}
@@ -186,7 +161,8 @@ class CreateArticle extends Component {
 const mapStateToProps = (state) => {
   return {
     auth: state.firebase.auth,
-    departments: state.firestore.data.departments
+    departments: state.firestore.data.departments,
+    firebase: state.firebase
   }
 }
 

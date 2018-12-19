@@ -74,33 +74,3 @@ exports.userJoined = functions.auth.user().onCreate(user => {
     });
 });
 
-exports.imageUpload = functions.https.onRequest((request, response) => {
-  response.set('Access-Control-Allow-Origin', "*")
-  response.set('Access-Control-Allow-Methods', 'GET, POST')
-
-  const imageBuffer = request.body,
-    mimeType = 'image/jpeg',
-    fileName = 'Test.jpg'
-
-  var bucket = admin.storage().bucket();
-
-  console.log('img buffer:', imageBuffer)
-  
-  // Upload the image to the bucket
-  var file = bucket.file('article-images/' + fileName);
-
-  file.save(imageBuffer, {
-    metadata: { contentType: mimeType },
-  }, ((error) => {
-
-    if (error) {
-      return response.status(500).send('Unable to upload the image.');
-    }
-      let data = {
-        location:
-          "https://d3lut3gzcpx87s.cloudfront.net/image_encoded/aHR0cHM6Ly9zaWxrc3RhcnQuczMuYW1hem9uYXdzLmNvbS83MThkNmY1OC00NzI1LTQzNmEtYTcyZi03M2EzYzc0ZDJkM2QucG5n/540x100fPNG"
-      };
-      return response.status(200).send(JSON.stringify(data));
-  }));
-
-});

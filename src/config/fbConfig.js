@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
+import 'firebase/storage'
 
 // Initialize Firebase
 var config = {
@@ -8,7 +9,7 @@ var config = {
   authDomain: "naco-employee-portal.firebaseapp.com",
   databaseURL: "https://naco-employee-portal.firebaseio.com",
   projectId: "naco-employee-portal",
-  storageBucket: "gs://naco-employee-portal.appspot.com",
+  storageBucket: "naco-employee-portal.appspot.com",
   messagingSenderId: "18841270613"
 };
 

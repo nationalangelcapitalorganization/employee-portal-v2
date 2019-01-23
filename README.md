@@ -9,7 +9,9 @@ Fork and clone the repository. Install the dependencies and create a .env file w
 
 ## Finished Product
 
-Images coming soon.
+![Dashboard. Some information blurred out for confidentiality.](https://github.com/nationalangelcapitalorganization/employee-portal-v2/blob/master/public/img/Dashboard.png?raw=true)
+
+![Rich Text Editor](https://github.com/nationalangelcapitalorganization/employee-portal-v2/blob/master/public/img/Text-Editor.png?raw=true)
 
 ## Available Scripts
 

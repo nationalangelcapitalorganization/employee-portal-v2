@@ -9,6 +9,8 @@ import ReactMaterialSelect from "react-material-select";
 import "react-material-select/lib/css/reactMaterialSelect.css";
 import { Modal, Button } from "react-materialize";
 
+const $ = window.$
+
 class EditArticle extends Component {
   state = {
     id: this.props.id ? this.props.id : "",
@@ -67,9 +69,14 @@ class EditArticle extends Component {
       this.setState((prevState) => ({ errors: { ...prevState.errors, general: 'There were errors in your submission. Please review your article and try again.' } }))
       return
     }
-
     this.props.editArticle(submission);
-    this.props.history.push("/");
+    $('#save-modal').modal('open')
+    setTimeout(() => {
+      $('#save-modal').modal('close');
+      if (submission.publish) {
+        this.props.history.push("/");
+      }
+    }, 2000)
   };
 
   handlePublish = async e => {
@@ -77,6 +84,11 @@ class EditArticle extends Component {
     await this.setState({publish: true})
     this.handleSubmit(e)
   };
+
+  // Customize text inside of Saving Modal based on whether or not user is publishing
+  isPublished = () => {
+    return this.state.publish ? <p>You have successfully published</p> : <p>You have successfully saved.</p>
+  }
 
 
   render() {
@@ -101,6 +113,14 @@ class EditArticle extends Component {
 
       return (
         <div className="container">
+
+          <Modal
+            id="save-modal"
+            header='Success!'
+          >
+            {this.isPublished()}
+          </Modal>
+
           <form className="white article-form">
             <div className="switch right-align publish-switch">
               <label>

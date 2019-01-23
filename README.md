@@ -1,5 +1,15 @@
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# NACOpedia
+
+A React-based employee portal used to write, store, and display all of a company's institutional knowledge. Uses Google Firebase for authentication, web functions, and NoSQL database. A Rich Text Editor allows for image upload and placement, video embeds, text formatting, etc. which is converted and displayed in html. Articles can be sorted by department and edited at a later date by their original author.
+
+## Getting Started
+
+Fork and clone the repository. Install the dependencies and create a .env file with your TinyMCE API key. Run 'npm start' to start the development server.
+
+## Finished Product
+
+Images coming soon.
 
 ## Available Scripts
 
@@ -43,3 +53,24 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+## Dependencies
+
+    @tinymce/tinymce-react
+    firebase
+    materialize-css
+    moment
+    react
+    react-dom
+    react-html-parser
+    react-material-select
+    react-materialize
+    react-redux
+    react-redux-firebase
+    react-router-dom
+    react-scripts
+    redux
+    redux-firestore
+    redux-thunk
+    uuid

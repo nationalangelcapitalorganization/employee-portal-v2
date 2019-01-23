@@ -1,19 +1,23 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { createArticle } from '../../store/actions/articleActions'
+import { createArticle, editArticle } from '../../store/actions/articleActions'
 import { Redirect } from 'react-router-dom'
 import { Editor } from '@tinymce/tinymce-react'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import ReactMaterialSelect from 'react-material-select'
 import 'react-material-select/lib/css/reactMaterialSelect.css'
-import { Modal, Button } from "react-materialize";
+import { Modal, Button } from "react-materialize"
 
+const uuidv4 = require('uuid/v4')
+const $ = window.$
 
 class CreateArticle extends Component {
   state = {
+    id: null,
     title: '',
     department: '',
+    prevDepartment: null,
     content: 'Enter your Article here...',
     publish: false,
     errors: {}
@@ -38,6 +42,7 @@ class CreateArticle extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
+    const id = this.state.id ? this.state.id : uuidv4()
     const {errors, ...submission} = this.state
     let error = false
     for (let item in submission) {
@@ -52,8 +57,22 @@ class CreateArticle extends Component {
       this.setState((prevState) => ({ errors: { ...prevState.errors, general: 'There were errors in your submission. Please review your article and try again.' } }))
       return 
     }
-    this.props.createArticle(submission)
-    this.props.history.push('/')
+    submission.id = id
+    if (this.state.id) {
+      console.log("already submitted")
+      this.props.editArticle(submission)
+    } else {
+      this.props.createArticle(submission)
+      this.setState({ id: id })
+    }
+    this.setState({ prevDepartment: submission.department })
+    $('#save-modal').modal('open')
+    setTimeout(() => { 
+      $('#save-modal').modal('close');
+      if (submission.publish) {
+        this.props.history.push("/");
+      }
+    }, 2000)
   }
 
   handlePublish = async e => {
@@ -61,6 +80,11 @@ class CreateArticle extends Component {
     await this.setState({publish: true})
     this.handleSubmit(e)
   };
+
+  // Customize text inside of Saving Modal based on whether or not user is publishing
+  isPublished = () => {
+    return this.state.publish ? <p>You have successfully published</p> : <p>You have successfully saved.</p>
+  }
 
   render() {
     const { auth, departments, firebase } = this.props
@@ -74,6 +98,14 @@ class CreateArticle extends Component {
 
       return (
         <div className="container">
+
+          <Modal
+            id="save-modal"
+            header='Success!'
+              >
+            {this.isPublished()}
+          </Modal>
+
           <form className="white article-form">
             <div className="switch right-align publish-switch">
               <label>Publish:
@@ -175,7 +207,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createArticle: (article) => dispatch(createArticle(article))
+    createArticle: (article) => dispatch(createArticle(article)),
+    editArticle: (article) => dispatch(editArticle(article))
   }
 }
 

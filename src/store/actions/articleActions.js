@@ -4,32 +4,35 @@ export const createArticle = article => {
     const firestore = getFirestore();
     const profile = getState().firebase.profile;
     const authorId = getState().firebase.auth.uid;
+    const { id, prevDepartment, ...noIdArticle } = article;
     firestore
       .collection("articles")
-      .add({
-        ...article,
+      .doc(id)
+      .set({
+        ...noIdArticle,
         authorFirstName: profile.firstName,
         authorLastName: profile.lastName,
         authorId: authorId,
         createdAt: new Date()
       })
-      .then(res => {
+      .then(() => {
+        
         firestore
           .collection("users")
           .doc(authorId)
           .update({
-            articles: firestore.FieldValue.arrayUnion(res.id)
+            articles: firestore.FieldValue.arrayUnion(id)
           });
         firestore
           .collection("departments")
           .doc(article.department)
           .update({
-            departmentArticles: firestore.FieldValue.arrayUnion(res.id)
+            departmentArticles: firestore.FieldValue.arrayUnion(id)
           });
-        return;
+        return id;
       })
-      .then(() => {
-        dispatch({ type: "CREATE_ARTICLE", article });
+      .then((res) => {
+        dispatch({ type: "CREATE_ARTICLE", article, articleId: res });
       })
       .catch(err => {
         dispatch({ type: "CREATE_ARTICLE_ERROR", err });
@@ -80,7 +83,6 @@ export const editArticle = article => {
 
 export const removeArticle = article => {
   return (dispatch, getState, { getFirestore }) => {
-    console.log(article);
 
     //  // make async call to database
     const firestore = getFirestore();

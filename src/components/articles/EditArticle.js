@@ -11,6 +11,7 @@ import { Modal, Button } from "react-materialize";
 
 const $ = window.$
 
+
 class EditArticle extends Component {
   state = {
     id: this.props.id ? this.props.id : "",
@@ -24,6 +25,14 @@ class EditArticle extends Component {
     errors: {}
   };
 
+  componentDidMount() {
+    document.addEventListener("keydown", this.saveHotkey, false)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.saveHotkey, false)
+  }
+
   componentWillReceiveProps(nextProps) {
     this.setState({
       id: nextProps.id,
@@ -33,6 +42,14 @@ class EditArticle extends Component {
       department: nextProps.article.department,
       prevDepartment: nextProps.article.department
     });
+  }
+
+  saveHotkey = e => {
+    if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.keyCode === 83) {
+      e.preventDefault();
+      let submitBtn = $('.submit-btn').first();
+      submitBtn.trigger('click');
+    }
   }
 
   handleChange = e => {
@@ -73,15 +90,15 @@ class EditArticle extends Component {
     $('#save-modal').modal('open')
     setTimeout(() => {
       $('#save-modal').modal('close');
-      if (submission.publish) {
-        this.props.history.push("/");
-      }
+      // if (submission.publish) {
+      //   this.props.history.push("/");
+      // }
     }, 2000)
   };
 
   handlePublish = async e => {
     e.preventDefault();
-    await this.setState({publish: true})
+    await $('#publish').trigger('click')
     this.handleSubmit(e)
   };
 
@@ -176,7 +193,7 @@ class EditArticle extends Component {
                   plugins: [
                     "advlist autolink link image lists charmap print preview hr anchor pagebreak",
                     "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-                    "save table contextmenu directionality emoticons paste textcolor"
+                    "table contextmenu directionality emoticons paste textcolor"
                   ],
                   toolbar:
                     "formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview",
@@ -202,11 +219,11 @@ class EditArticle extends Component {
             </div>
 
             <div className="input-field">
-            { this.state.publish ? <div><Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0">
+              {this.state.publish ? <div><Button onClick={this.handleSubmit} className="btn submit-btn pink lighten-1 z-depth-0">
                     Update
                   </Button></div> : <Modal
                 trigger={
-                  <Button className="btn pink lighten-1 z-depth-0">
+                  <Button className="btn pink submit-btn lighten-1 z-depth-0">
                     Update
                   </Button>
                 }

@@ -12,6 +12,7 @@ import { Modal, Button } from "react-materialize"
 const uuidv4 = require('uuid/v4')
 const $ = window.$
 
+
 class CreateArticle extends Component {
   state = {
     id: null,
@@ -21,6 +22,23 @@ class CreateArticle extends Component {
     content: 'Enter your Article here...',
     publish: false,
     errors: {}
+  }
+
+  componentDidMount() {
+    document.addEventListener("keydown", this.saveHotkey, false)
+
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.saveHotkey, false)
+  }
+
+  saveHotkey = e => {
+    if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.keyCode === 83) {
+      e.preventDefault();
+      let submitBtn = $('.submit-btn').first();
+      submitBtn.trigger('click');
+    }
   }
 
   handleChange = (e) => {
@@ -69,15 +87,15 @@ class CreateArticle extends Component {
     $('#save-modal').modal('open')
     setTimeout(() => { 
       $('#save-modal').modal('close');
-      if (submission.publish) {
-        this.props.history.push("/");
-      }
+      // if (submission.publish) {
+      //   this.props.history.push("/");
+      // }
     }, 2000)
   }
 
   handlePublish = async e => {
     e.preventDefault();
-    await this.setState({publish: true})
+    await $('#publish').trigger('click')
     this.handleSubmit(e)
   };
 
@@ -97,7 +115,7 @@ class CreateArticle extends Component {
       let departmentKeys = Object.keys(departments)
 
       return (
-        <div className="container">
+        <div className="container" >
 
           <Modal
             id="save-modal"
@@ -138,7 +156,7 @@ class CreateArticle extends Component {
                 init={{
                   plugins: ['advlist autolink link image lists charmap print preview hr anchor pagebreak',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'save table contextmenu directionality emoticons paste textcolor'],
+                    'table contextmenu directionality emoticons paste textcolor'],
                   toolbar: 'formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview',
                   branding: false,
                   height: 400,
@@ -162,11 +180,11 @@ class CreateArticle extends Component {
             </div>
 
             <div className="input-field">
-            { this.state.publish ? <div><Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0">
+            { this.state.publish ? <div><Button onClick={this.handleSubmit} className="btn submit-btn pink lighten-1 z-depth-0">
                     Save
                   </Button></div> : <Modal
                 trigger={
-                  <Button className="btn pink lighten-1 z-depth-0">
+                  <Button className="btn pink submit-btn lighten-1 z-depth-0">
                     Save
                   </Button>
                 }

@@ -8,12 +8,14 @@ const Navbar = (props) => {
   const { auth, profile } = props
   const links = auth.uid ? <SignedInLinks profile={profile} email={auth.email} /> : <SignedOutLinks />
   return (
-    <nav className="nav-wrapper grey darken-3">
+    <nav id="navigation-bar" className="nav-wrapper grey darken-2">
       <div className="container">
         <Link to='/' className="brand-logo logo">
-          <img src="/img/NACO_Logo.png" alt="National Angel Capital Organization" id="nav-logo"/>
+          <i className="material-icons">
+            library_books
+</i>NACOPedia
         </Link>
-        { links }
+        {links}
       </div>
     </nav>
   )

@@ -7,17 +7,35 @@ import M from 'materialize-css'
 
 class SignedInLinks extends Component {
 
-  state = {
-    instance: null
-  }
 
   componentDidMount() {
-    const elem = document.querySelector('.sidenav')
-    const instance = M.Sidenav.init(elem, {
+    const sidenav = document.querySelector('.sidenav')
+    const dropdowns = document.querySelectorAll('.dropdown-trigger')
+    const body = document.querySelector('body')
+    const adjustBody = () => {
+      if (window.innerWidth < 993) {
+        body.style.margin = '0'
+      } else {
+        body.style.margin = '0 0 0 160px'
+      }
+    }
+    adjustBody()
+
+    window.addEventListener('resize', adjustBody)
+
+
+    M.Sidenav.init(sidenav, {
       inDuration: 350,
-      outDuration: 350
+      outDuration: 350,
     })
-    this.setState({instance: instance})
+    M.Dropdown.init(dropdowns, {
+      inDuration: 350,
+      outDuration: 350,
+      closeOnClick: true,
+      constrainWidth: true,
+      coverTrigger: false,
+    })
+
   }
 
   render() {
@@ -26,7 +44,6 @@ class SignedInLinks extends Component {
         <a href="#!" data-target="slide-out" className="sidenav-trigger"><i className="material-icons">menu</i></a>
         <ul className="right hide-on-med-and-down">
           <li><NavLink to='/create'>New Article</NavLink></li>
-          <li><a href="#!" onClick={this.props.signOut}>Log Out</a></li>
           <li><NavLink to='/userarticles' className='btn btn-floating pink lighten-1'>{this.props.profile.initials}</NavLink></li>
         </ul>
 
@@ -41,7 +58,27 @@ class SignedInLinks extends Component {
               <span className="white-text pink lighten-1 badge">{this.props.email}</span>
             </div>
           </li>
-          <li><NavLink to='/create' className="sidenav-close">New Article</NavLink></li>
+          
+          <li><a className="dropdown-trigger" href="#!" data-target="dropdown1">NACOPedia<i className="material-icons right">arrow_drop_down</i></a></li>
+          <ul id='dropdown1' className='dropdown-content'>
+            <li><NavLink to='/' className="sidenav-close">Dashboard</NavLink></li>
+            <li><NavLink to='/create' className="sidenav-close">New Article</NavLink></li>
+            <li><NavLink to='/userarticles' className="sidenav-close">My Articles</NavLink></li>
+          </ul>
+          <li><a className="dropdown-trigger" href="#!" data-target="dropdown2">Speakers<i className="material-icons right">arrow_drop_down</i></a></li>
+          <ul id='dropdown2' className='dropdown-content'>
+            <li><NavLink to='#' className="sidenav-close">Add Speaker</NavLink></li>
+            <li><NavLink to='#' className="sidenav-close">Review Speakers</NavLink></li>
+          </ul>
+          <li><div className="divider"></div></li>
+          <li><a href="#!" onClick={this.props.signOut} className="sidenav-close">Log Out</a></li>
+        </ul>
+
+        <ul className="sidenav sidenav-fixed">
+          <li className="grey darken-3"><img src="/img/NACO_Logo.png" alt="National Angel Capital Organization" /></li>
+          <li><NavLink to='/' className="sidenav-close">NACOPedia</NavLink></li>
+          <li><NavLink to='#' className="sidenav-close">Speakers</NavLink></li>
+          <li><div className="divider"></div></li>
           <li><a href="#!" onClick={this.props.signOut} className="sidenav-close">Log Out</a></li>
         </ul>
     </div>

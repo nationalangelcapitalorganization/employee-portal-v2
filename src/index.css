@@ -3,7 +3,7 @@ html {
 }
 
 body {
-  margin: 0;
+  margin: 0 0 0 160px;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -91,8 +91,22 @@ form h5 {
 
 /* Navigation */
 
-#nav-logo {
-  height: 40px;
+.sidenav-fixed {
+  width: 160px;
+}
+
+.sidenav-fixed>li:nth-child(1) {
+  height: 64px;
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.sidenav-fixed>li:nth-child(1)>img {
+  width: 80%;
 }
 
 .signedIn-sidenav .user-view .background {
@@ -104,14 +118,10 @@ form h5 {
   margin-bottom: 10px;
 }
 
-.logo {
-    display: inline-block;
-    transform: translateY(-2px)
-}
-
-.logo>img {
-    vertical-align: middle;
-    padding-bottom: 3px;
+nav .brand-logo i {
+  line-height: inherit;
+  font-size: 1em;
+  margin-right: 5px !important;
 }
 
 
@@ -149,4 +159,11 @@ form h5 {
 
 .buttons-container {
   display: flex;
+}
+
+
+@media all and ( max-width: 992px ) {
+  body {
+    margin: 0;
+  }
 }

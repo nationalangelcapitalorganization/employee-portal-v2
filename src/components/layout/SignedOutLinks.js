@@ -7,6 +7,13 @@ class SignedOutLinks extends Component {
 
   componentDidMount() {
     const elem = document.querySelector('.sidenav')
+    const body = document.querySelector('body')
+    const adjustBody = () => {
+      body.style.margin = '0'
+    }
+    adjustBody()
+
+    window.addEventListener('resize', adjustBody)
     M.Sidenav.init(elem, {
       inDuration: 350,
       outDuration: 350,

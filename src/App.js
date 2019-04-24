@@ -7,6 +7,7 @@ import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
 import CreateArticle from './components/articles/CreateArticle'
 import CreateSpeaker from './components/speakers/CreateSpeaker'
+import Speakers from './components/speakers/Speakers'
 import EditArticle from './components/articles/EditArticle'
 import UserArticleDashboard from './components/articles/UserArticleDashboard'
 
@@ -19,6 +20,7 @@ class App extends Component {
           <Navbar />
           <Switch>
             <Route exact path='/' component={Dashboard} />
+            <Route exact path='/speakers' component={Speakers} />
             <Route exact path='/article/:id' component={ArticleDetails} />
             <Route path='/article/:id/edit' component={EditArticle} />
             <Route path='/signin' component={SignIn} />

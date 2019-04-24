@@ -6,10 +6,12 @@ import ArticleDetails from './components/articles/ArticleDetails'
 import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
 import CreateArticle from './components/articles/CreateArticle'
+import CreateSpeaker from './components/speakers/CreateSpeaker'
 import EditArticle from './components/articles/EditArticle'
 import UserArticleDashboard from './components/articles/UserArticleDashboard'
 
 class App extends Component {
+
   render() {
     return (
       <BrowserRouter>
@@ -22,6 +24,7 @@ class App extends Component {
             <Route path='/signin' component={SignIn} />
             <Route path='/signup' component={SignUp} />
             <Route path='/create' component={CreateArticle} />
+            <Route path='/createspeaker' component={CreateSpeaker} />
             <Route path='/userarticles' component={UserArticleDashboard} />
           </Switch>
         </div>

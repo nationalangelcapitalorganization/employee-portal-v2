@@ -1,20 +1,18 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import SignedInLinks from './SignedInLinks'
 import SignedOutLinks from './SignedOutLinks'
 import { connect } from 'react-redux'
 
 const Navbar = (props) => {
   const { auth, profile } = props
-  const links = auth.uid ? <SignedInLinks profile={profile} email={auth.email} /> : <SignedOutLinks />
+  let speakerApp = props.location.pathname !== '/createspeaker'
+  const links = auth.uid ? <SignedInLinks profile={profile} speakerApp={speakerApp} email={auth.email} /> : <SignedOutLinks />
+  const headerLogo = speakerApp ? <Link to='/' className="brand-logo logo"><i className="material-icons">library_books</i>NACOPedia</Link> : <Link to='/' className="brand-logo logo"><i className="material-icons">people</i>Speakers</Link>
   return (
     <nav id="navigation-bar" className="nav-wrapper grey darken-2">
       <div className="container">
-        <Link to='/' className="brand-logo logo">
-          <i className="material-icons">
-            library_books
-</i>NACOPedia
-        </Link>
+        { headerLogo }
         {links}
       </div>
     </nav>
@@ -28,4 +26,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(Navbar)
+export default withRouter(connect(mapStateToProps)(Navbar))

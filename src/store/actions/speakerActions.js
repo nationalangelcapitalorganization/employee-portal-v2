@@ -43,7 +43,7 @@ export const editSpeaker = speaker => {
 
 export const removeSpeaker = speaker => {
   return (dispatch, getState, { getFirestore }) => {
-
+console.log(speaker)
     //  // make async call to database
     const firestore = getFirestore();
     firestore

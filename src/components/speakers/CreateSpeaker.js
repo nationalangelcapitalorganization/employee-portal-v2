@@ -1,18 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { createSpeaker, editSpeaker } from '../../store/actions/speakerActions'
 import { Redirect } from 'react-router-dom'
 import { Editor } from '@tinymce/tinymce-react'
 import { compose } from 'redux'
+import { firestoreConnect } from 'react-redux-firebase'
 import { Modal, Button } from "react-materialize"
 
-
+const uuidv4 = require('uuid/v4')
 const $ = window.$
 
 
 class CreateSpeaker extends Component {
   state = {
     id: null,
-    name: '',
+    firstName: '',
+    lastName: '',
     title: '',
     content: 'Enter your Modal Content here...',
     publish: false,
@@ -49,6 +52,36 @@ class CreateSpeaker extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
+    const id = this.state.id ? this.state.id : uuidv4()
+    const { errors, ...submission } = this.state
+    let error = false
+    for (let item in submission) {
+      if (submission[item] === '') {
+        this.setState((prevState) => ({ errors: { ...prevState.errors, [item]: `Please input ${item === 'content' ? 'some content' : `a ${item}`}` } }))
+        error = true
+      } else {
+        this.setState((prevState) => ({ errors: { ...prevState.errors, [item]: '' } }))
+      }
+    }
+    if (error) {
+      this.setState((prevState) => ({ errors: { ...prevState.errors, general: 'There were errors in your submission. Please review and try again.' } }))
+      return
+    }
+    submission.id = id
+    if (this.state.id) {
+      console.log("already submitted")
+      this.props.editSpeaker(submission)
+    } else {
+      this.props.createSpeaker(submission)
+      this.setState({ id: id })
+    }
+    $('#save-modal').modal('open')
+    setTimeout(() => {
+      $('#save-modal').modal('close');
+      // if (submission.publish) {
+      //   this.props.history.push("/");
+      // }
+    }, 2000)
   }
 
   handlePublish = async e => {
@@ -78,7 +111,7 @@ class CreateSpeaker extends Component {
             {this.isPublished()}
           </Modal>
 
-          <form className="white article-form">
+          <form className="white speaker-form">
             <div className="switch right-align publish-switch">
               <label>Publish:
               <input id="publish" onChange={(e) => { this.setState({ publish: e.target.checked }) }} type="checkbox" />
@@ -88,12 +121,37 @@ class CreateSpeaker extends Component {
             <h5 className="grey-text text-darken-3">Create a New Speaker</h5>
 
             <div className="input-field">
+              <label htmlFor="firstName">First Name</label>
+              <input type="text" id="firstName" onChange={this.handleChange} />
+              <span className="validation-text">{this.state.errors.firstName}</span>
+            </div>
+
+            <div className="input-field">
+              <label htmlFor="lastName">Last Name</label>
+              <input type="text" id="lastName" onChange={this.handleChange} />
+              <span className="validation-text">{this.state.errors.lastName}</span>
+            </div>
+
+            <div className="input-field">
               <label htmlFor="title">Title</label>
               <input type="text" id="title" onChange={this.handleChange} />
               <span className="validation-text">{this.state.errors.title}</span>
             </div>
 
+            <div className="input-field">
+              <label htmlFor="company">Company Name</label>
+              <input type="text" id="company" onChange={this.handleChange} />
+              <span className="validation-text">{this.state.errors.company}</span>
+            </div>
+
+            <div className="input-field">
+              <label htmlFor="companySite">Company Website</label>
+              <input type="text" id="companySite" onChange={this.handleChange} />
+              <span className="validation-text">{this.state.errors.companySite}</span>
+            </div>
+
             <div className='input-field'>
+              <label id="modal-label">Modal Content</label>
               <Editor
                 id='content'
                 apiKey={apiKey}
@@ -108,7 +166,7 @@ class CreateSpeaker extends Component {
                   inline: true,
                   images_upload_handler: function (blobInfo, success, failure) {
                     let blob = blobInfo.blob()
-                    firebase.uploadFile(('article_images/' + Date.now()), blob)
+                    firebase.uploadFile(('speaker_images/' + Date.now()), blob)
                       .then(res => {
                         res.uploadTaskSnapshot.ref.getDownloadURL().then(function (downloadURL) {
                           success(downloadURL);
@@ -142,7 +200,7 @@ class CreateSpeaker extends Component {
               </Button></div>}
                 >
                   <p>
-                    Would you like to publish this article as well?
+                    Would you like to publish this speaker as well?
                 </p>
                 </Modal>}
               <span className="validation-text">{this.state.errors.general}</span>
@@ -160,6 +218,15 @@ const mapStateToProps = (state) => {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createSpeaker: (speaker) => dispatch(createSpeaker(speaker)),
+    editSpeaker: (speaker) => dispatch(editSpeaker(speaker))
+  }
+}
+
 export default compose(
-  connect(mapStateToProps)
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect([
+  ])
 )(CreateSpeaker)

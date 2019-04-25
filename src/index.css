@@ -170,6 +170,28 @@ nav .brand-logo i {
   display: flex;
 }
 
+/* Manage Speakers */
+
+.speakers .col {
+  width: 100%;
+}
+
+/* Create Speaker */
+
+.speaker-form .input-field {
+  margin-top: 20px;
+}
+
+.speaker-form #content {
+  margin-top: 60px;
+}
+
+.speaker-form #modal-label {
+  transform: translateY(-32px);
+}
+
+
+/* Media Queries */
 
 @media all and ( max-width: 992px ) {
   body {

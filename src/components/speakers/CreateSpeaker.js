@@ -6,6 +6,7 @@ import { Editor } from '@tinymce/tinymce-react'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { Modal, Button } from "react-materialize"
+import { DropzoneArea } from 'material-ui-dropzone'
 
 const uuidv4 = require('uuid/v4')
 const $ = window.$
@@ -19,12 +20,12 @@ class CreateSpeaker extends Component {
     title: '',
     content: 'Enter your Modal Content here...',
     publish: false,
+    headshot: '',
     errors: {}
   }
 
   componentDidMount() {
     document.addEventListener("keydown", this.saveHotkey, false)
-
   }
 
   componentWillUnmount() {
@@ -43,6 +44,22 @@ class CreateSpeaker extends Component {
     this.setState({
       [e.target.id]: e.target.value
     })
+  }
+
+  handleFile = (file, firebase) => {
+    firebase.uploadFile(('speaker_images/' + Date.now()), file)
+      .then(res => {
+        res.uploadTaskSnapshot.ref.getDownloadURL().then( downloadURL => {
+          this.setState({ headshot: downloadURL })
+        });
+      })
+      .catch(err => {
+        throw err;
+      })
+  }
+
+  handleImageDelete = (image) => {
+    this.setState({headshot: ''})
   }
 
   handleEditorChange = (e) => {
@@ -133,7 +150,19 @@ class CreateSpeaker extends Component {
             </div>
 
             <div className="input-field">
-              <label htmlFor="title">Title</label>
+              <label>Speaker Headshot</label>
+              <DropzoneArea
+                dropzoneText='Drag and drop an image file here or click.'
+                onDrop={file => { this.handleFile(file, firebase) }}
+                filesLimit={1}
+                acceptedFiles={['image/*']}
+                onDelete={this.handleImageDelete}
+              />
+              <span className="validation-text">{this.state.errors.headshot}</span>
+            </div>
+
+            <div className="input-field">
+              <label htmlFor="title">Job Title</label>
               <input type="text" id="title" onChange={this.handleChange} />
               <span className="validation-text">{this.state.errors.title}</span>
             </div>

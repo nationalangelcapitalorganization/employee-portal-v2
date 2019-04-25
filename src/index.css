@@ -190,6 +190,11 @@ nav .brand-logo i {
   transform: translateY(-32px);
 }
 
+.DropzoneArea-dropZone-1 {
+  transform: translateY(42px);
+  margin-bottom: 65px;
+}
+
 
 /* Media Queries */
 

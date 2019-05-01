@@ -18,6 +18,8 @@ class CreateSpeaker extends Component {
     firstName: '',
     lastName: '',
     title: '',
+    company: '',
+    companySite: '',
     content: 'Enter your Modal Content here...',
     publish: false,
     headshot: '',
@@ -95,9 +97,9 @@ class CreateSpeaker extends Component {
     $('#save-modal').modal('open')
     setTimeout(() => {
       $('#save-modal').modal('close');
-      // if (submission.publish) {
-      //   this.props.history.push("/");
-      // }
+      if (submission.publish) {
+        this.props.history.push("/speakers");
+      }
     }, 2000)
   }
 
@@ -151,13 +153,17 @@ class CreateSpeaker extends Component {
 
             <div className="input-field">
               <label>Speaker Headshot</label>
-              <DropzoneArea
-                dropzoneText='Drag and drop an image file here or click.'
-                onDrop={file => { this.handleFile(file, firebase) }}
-                filesLimit={1}
-                acceptedFiles={['image/*']}
-                onDelete={this.handleImageDelete}
-              />
+              <div className="dropzone-container">
+                <div><img className="headshot-img" src={this.state.headshot !== '' ? `${this.state.headshot}` : '/img/headshot-placeholder.jpg'} alt="Speaker Headshot" /></div>
+                <DropzoneArea
+                  dropZoneClass="headshot-dropzone"
+                  dropzoneText='Drag and drop an image file here or click.'
+                  onDrop={file => { this.handleFile(file, firebase) }}
+                  filesLimit={1}
+                  acceptedFiles={['image/*']}
+                  onDelete={this.handleImageDelete}
+                />
+              </div>
               <span className="validation-text">{this.state.errors.headshot}</span>
             </div>
 

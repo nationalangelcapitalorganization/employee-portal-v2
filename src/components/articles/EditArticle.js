@@ -34,14 +34,16 @@ class EditArticle extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      id: nextProps.id,
-      title: nextProps.article.title,
-      content: nextProps.article.content,
-      publish: nextProps.article.publish,
-      department: nextProps.article.department,
-      prevDepartment: nextProps.article.department
-    });
+    if (nextProps.article) {
+      this.setState({
+        id: nextProps.id,
+        title: nextProps.article.title,
+        content: nextProps.article.content,
+        publish: nextProps.article.publish,
+        department: nextProps.article.department,
+        prevDepartment: nextProps.article.department
+      });
+    }
   }
 
   saveHotkey = e => {
@@ -220,25 +222,25 @@ class EditArticle extends Component {
 
             <div className="input-field">
               {this.state.publish ? <div><Button onClick={this.handleSubmit} className="btn submit-btn pink lighten-1 z-depth-0">
-                    Update
+                Update
                   </Button></div> : <Modal
-                trigger={
-                  <Button className="btn pink submit-btn lighten-1 z-depth-0">
-                    Update
+                  trigger={
+                    <Button className="btn pink submit-btn lighten-1 z-depth-0">
+                      Update
                   </Button>
-                }
-                header='Would you like to publish?'
+                  }
+                  header='Would you like to publish?'
                   actions={<div><Button onClick={this.handlePublish} className="btn z-depth-0 yes-button modal-close">
-                Yes
+                    Yes
               </Button>
                     <Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0 modal-close">
-               No
+                      No
               </Button></div>}
-              >
-                <p>
-                  Would you like to publish this article as well?
+                >
+                  <p>
+                    Would you like to publish this article as well?
                 </p>
-              </Modal> }
+                </Modal>}
               <span className="validation-text">{this.state.errors.general}</span>
             </div>
           </form>

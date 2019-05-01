@@ -176,6 +176,14 @@ nav .brand-logo i {
   width: 100%;
 }
 
+.speakers i {
+  font-size: inherit;
+}
+
+.speakers th:not(:nth-child(5)) {
+  cursor: pointer;
+}
+
 /* Create Speaker */
 
 .speaker-form .input-field {
@@ -190,9 +198,28 @@ nav .brand-logo i {
   transform: translateY(-32px);
 }
 
-.DropzoneArea-dropZone-1 {
-  transform: translateY(42px);
+.dropzone-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
   margin-bottom: 65px;
+  transform: translateY(42px);
+}
+
+.dropzone-container>div {
+  margin: 20px;
+}
+
+.dropzone-container>div:nth-child(1) {
+width: 20%;
+}
+
+.dropzone-container>div:nth-child(2) {
+width: 70%;
+}
+
+.headshot-img {
+  max-width: 100%;
 }
 
 

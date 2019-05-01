@@ -1,18 +1,61 @@
 import React, { Component } from "react"
+import SpeakerList from './SpeakerList'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
 import { firestoreConnect } from 'react-redux-firebase'
 import { removeSpeaker } from '../../store/actions/speakerActions'
-import { Table, Modal, Button } from "react-materialize";
-import moment from 'moment'
+import { Table } from "react-materialize";
 
-class Dashboard extends Component {
+
+function SortArrow(props) {
+  if (props.sortedBy === props.column && !props.ascending) {
+    return (<i className="material-icons">
+      arrow_drop_up
+    </i>)
+  } else if (props.sortedBy === props.column && props.ascending) {
+    return (<i className="material-icons">
+      arrow_drop_down
+</i>)
+  } else {
+    return ""
+  }
+}
+
+
+class Speakers extends Component {
+
+  state = {
+    sortedBy: "",
+    ascending: false
+  }
+
+  handleSort = (speakers, field) => {
+    console.log(speakers, field)
+    const ascending = this.state.ascending
+    let sortedSpeakers = speakers.sort((a, b) => {
+
+      if (a[field] < b[field]) {
+        return ascending ?  1 : -1
+      }
+      if (a[field] > b[field]) {
+        return ascending ? -1 : 1
+      }
+      return 0;
+    })
+    this.setState({
+      sortedBy: field,
+      ascending: !ascending
+    })
+    console.log(sortedSpeakers)
+    return sortedSpeakers
+  }
 
   render() {
 
-    const { auth, speakers, removeSpeaker } = this.props
-    console.log(speakers)
+    const { auth, removeSpeaker } = this.props
+    let { speakers } = this.props
+
     if (!auth.uid) { return <Redirect to='/signin' /> }
 
     return (
@@ -24,46 +67,24 @@ class Dashboard extends Component {
               <Table>
                 <thead>
                   <tr>
-                    <th data-field="id">Name</th>
-                    <th data-field="name">Company</th>
-                    <th data-field="price">Status</th>
-                    <th data-field="price">Created</th>
-                    <th data-field="price">&nbsp;</th>
+                    <th data-field="lastName" onClick={(e) => {                     
+                      speakers = this.handleSort(speakers, e.currentTarget.dataset.field)
+                    }}>Name <SortArrow column='lastName' sortedBy={this.state.sortedBy} ascending={this.state.ascending} /></th>
+                    <th data-field="company" onClick={(e) => {
+                      speakers = this.handleSort(speakers, e.currentTarget.dataset.field)
+                    }}>Company <SortArrow column='company' sortedBy={this.state.sortedBy} ascending={this.state.ascending} /></th>
+                    <th data-field="publish" onClick={(e) => {
+                      speakers = this.handleSort(speakers, e.currentTarget.dataset.field)
+                    }}>Status <SortArrow column='publish' sortedBy={this.state.sortedBy} ascending={this.state.ascending} /></th>
+                    <th data-field="createdAt" onClick={(e) => {
+                      speakers = this.handleSort(speakers, e.currentTarget.dataset.field)
+                    }}>Created <SortArrow column='createdAt' sortedBy={this.state.sortedBy} ascending={this.state.ascending} /></th>
+                    <th data-field="delete">&nbsp;</th>
                   </tr>
                 </thead>
-                <tbody>
+                
+                <SpeakerList speakers={speakers} removeSpeaker={removeSpeaker} />
 
-                  {speakers && speakers.map(speaker => {
-                      return (
-                        <tr key={speaker.id}>
-                          <td>{speaker.firstName} {speaker.lastName}</td>
-                          <td>{speaker.company}</td>
-                          <td>{speaker.publish ? "Published" : "Not Published"}</td>
-                          <td>{speaker.createdAt ? moment(speaker.createdAt.toDate()).calendar() : null}</td>
-                          <td><Modal
-                            trigger={
-                              <Button style={{fontWeight: 'bold',}} className='transparent text-lighten-1 red-text z-depth-0 button-spacing delete-button' waves='light'>X</Button>
-                            }
-                            header='Delete this speaker?'
-                            actions={
-                              <div>
-                                <Button onClick={() => { removeSpeaker(speaker) }} className="modal-close red lighten-1 btn z-depth-0 yes-button">
-                                  I am sure
-                </Button>
-                                <Button className="btn lighten-1 z-depth-0 modal-close">
-                                  No, I will keep this speaker
-                </Button>       </div>
-                            }
-                          ><p>Are you sure you want to delete this speaker?</p>
-                            <p>This action can't be undone.</p>
-                          </Modal>
-                </td>
-                        </tr>
-                      )
-                    
-                  })}
-
-                </tbody>
               </Table>
             </div>
           </div>
@@ -91,4 +112,4 @@ export default compose(
   firestoreConnect([
     { collection: 'speakers' },
   ])
-)(Dashboard)
+)(Speakers)

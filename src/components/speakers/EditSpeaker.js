@@ -14,7 +14,7 @@ const $ = window.$
 
 class EditSpeaker extends Component {
   state = {
-    id: this.props.id ? this.props.id : "",
+    id: this.props.speakerId ? this.props.speakerId : "",
     firstName: this.props.speaker? this.props.speaker.firstName : '',
     lastName: this.props.speaker ? this.props.speaker.lastName : '',
     title: this.props.speaker ? this.props.speaker.title : '',

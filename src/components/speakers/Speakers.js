@@ -78,7 +78,7 @@ class Speakers extends Component {
                     }}>Status <SortArrow column='publish' sortedBy={this.state.sortedBy} ascending={this.state.ascending} /></th>
                     <th data-field="createdAt" onClick={(e) => {
                       speakers = this.handleSort(speakers, e.currentTarget.dataset.field)
-                    }}>Created <SortArrow column='createdAt' sortedBy={this.state.sortedBy} ascending={this.state.ascending} /></th>
+                    }}>Created <SortArrow column='createdAt' sortedBy={this.state.sortedBy} ascending={!this.state.ascending} /></th>
                     <th data-field="delete">&nbsp;</th>
                   </tr>
                 </thead>

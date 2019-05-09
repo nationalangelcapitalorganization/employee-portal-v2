@@ -1,23 +1,32 @@
+# NACO Employee Portal
 
-# NACOpedia
+## NACOpedia
 
 A React-based employee portal used to write, store, and display all of a company's institutional knowledge. Uses Google Firebase for authentication, web functions, and NoSQL database. A Rich Text Editor allows for image upload and placement, video embeds, text formatting, etc. which is converted and displayed in html. Articles can be sorted by department and edited at a later date by their original author.
 
-## Getting Started
+## Speakers
+
+Another application in the NACO Employee Portal. This is used to create and manage the many speakers that we have at our events, as well as their general information and their biographies. Speakers can be sorted by name, company, status, or creation date. A Rich Text Editor allows for image upload and placement, video embeds, text formatting, etc. which is converted and stored in html. This content is then available in a separate application as a speaker slider with modals for biographies.
+
+### Getting Started
 
 Fork and clone the repository. Install the dependencies and create a .env file with your TinyMCE API key. Run 'npm start' to start the development server.
 
-## Finished Product
+### Finished Product
 
 ![Dashboard. Some information blurred out for confidentiality.](https://github.com/nationalangelcapitalorganization/employee-portal-v2/blob/master/public/img/Dashboard.png?raw=true)
 
 ![Rich Text Editor](https://github.com/nationalangelcapitalorganization/employee-portal-v2/blob/master/public/img/Text-Editor.png?raw=true)
 
-## Available Scripts
+![Speaker management and listing.](https://github.com/nationalangelcapitalorganization/employee-portal-v2/blob/master/public/img/Text-Editor.png?raw=true)
+
+![Creating a speaker.](https://github.com/nationalangelcapitalorganization/employee-portal-v2/blob/master/public/img/Text-Editor.png?raw=true)
+
+### Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+#### `npm start`
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -25,12 +34,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `npm test`
+#### `npm test`
 
 Launches the test runner in the interactive watch mode.<br>
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+#### `npm run build`
 
 Builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -40,7 +49,7 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+#### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
@@ -50,18 +59,19 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+### Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 
-## Dependencies
+### Dependencies
 
     @tinymce/tinymce-react
     firebase
     materialize-css
+    material-ui-dropzone
     moment
     react
     react-dom

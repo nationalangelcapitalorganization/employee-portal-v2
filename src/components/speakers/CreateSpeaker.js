@@ -157,7 +157,7 @@ class CreateSpeaker extends Component {
                 <div><img className="headshot-img" src={this.state.headshot !== '' ? `${this.state.headshot}` : '/img/headshot-placeholder.jpg'} alt="Speaker Headshot" /></div>
                 <DropzoneArea
                   dropZoneClass="headshot-dropzone"
-                  dropzoneText='Drag and drop an image file here or click.'
+                  dropzoneText='Drag &amp; drop image. Size: 250 X 250px.'
                   onDrop={file => { this.handleFile(file, firebase) }}
                   filesLimit={1}
                   acceptedFiles={['image/*']}

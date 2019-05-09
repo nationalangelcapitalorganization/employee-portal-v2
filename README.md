@@ -18,9 +18,9 @@ Fork and clone the repository. Install the dependencies and create a .env file w
 
 ![Rich Text Editor](https://github.com/nationalangelcapitalorganization/employee-portal-v2/blob/master/public/img/Text-Editor.png?raw=true)
 
-![Speaker management and listing.](https://github.com/nationalangelcapitalorganization/employee-portal-v2/blob/master/public/img/Text-Editor.png?raw=true)
+![Speaker management and listing.](https://raw.githubusercontent.com/nationalangelcapitalorganization/employee-portal-v2/master/public/img/speaker-management.png)
 
-![Creating a speaker.](https://github.com/nationalangelcapitalorganization/employee-portal-v2/blob/master/public/img/Text-Editor.png?raw=true)
+![Creating a speaker.](https://raw.githubusercontent.com/nationalangelcapitalorganization/employee-portal-v2/master/public/img/create-speaker.png)
 
 ### Available Scripts
 

@@ -196,7 +196,7 @@ class EditSpeaker extends Component {
           </div>
 
           <div className="input-field">
-            <ReactMaterialSelect label='Priority' resetLabel={false} defaultValue={this.state.department} onChange={this.handleSelect}>
+            <ReactMaterialSelect label='Priority' resetLabel={false} defaultValue={this.state.priority} onChange={this.handleSelect}>
               <option dataValue={0}>None</option>
               <option dataValue={1}>Keynote</option>
               <option dataValue={2}>Priority</option>

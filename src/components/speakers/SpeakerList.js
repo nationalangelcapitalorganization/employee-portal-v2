@@ -16,7 +16,7 @@ const SpeakerList = ({ speakers, removeSpeaker }) => {
             <td>{speaker.publish ? "Published" : "Not Published"}</td>
             <td><a href={speaker.headshot} target="_blank" rel="noopener noreferrer">
 
-<i class="material-icons" style={{textAlign: "center", width: "100%"}}>
+<i className="material-icons" style={{textAlign: "center", width: "100%"}}>
                 image
 </i></a></td>
             <td>{speaker.createdAt ? moment(speaker.createdAt.toDate()).calendar() : null}</td>

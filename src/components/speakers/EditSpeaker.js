@@ -33,6 +33,10 @@ class EditSpeaker extends Component {
 
   componentDidMount() {
     document.addEventListener("keydown", this.saveHotkey, false)
+    if (this.refs.priorityselect) {
+      console.log(this.refs.priorityselect.state)
+      this.refs.priorityselect.handleSetSelect(prioritySelectOptions[this.state.priority], this.state.priority)
+    }
   }
 
   componentWillUnmount() {
@@ -56,12 +60,11 @@ class EditSpeaker extends Component {
   }
   }
 
-  // componentDidUpdate() {
-  //   if (this.refs.priorityselect) {
-  //     console.log(this.refs.priorityselect.state)
-  //     this.refs.priorityselect.handleSetSelect(prioritySelectOptions[0], 0)
-  //   }
-  // }
+  componentDidUpdate() {
+    if (this.refs.priorityselect) {
+      this.refs.priorityselect.handleSetSelect(prioritySelectOptions[this.state.priority], this.state.priority)
+    }
+  }
 
   saveHotkey = e => {
     if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.keyCode === 83) {

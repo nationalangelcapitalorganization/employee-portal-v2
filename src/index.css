@@ -180,8 +180,12 @@ nav .brand-logo i {
   font-size: inherit;
 }
 
-.speakers th:not(:nth-child(5)) {
+.speakers th:not(:nth-child(4)) {
   cursor: pointer;
+}
+
+.speakers th:last-child {
+  cursor: inherit;
 }
 
 /* Create Speaker */

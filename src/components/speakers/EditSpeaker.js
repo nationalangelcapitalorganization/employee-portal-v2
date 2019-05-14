@@ -13,6 +13,8 @@ import { DropzoneArea } from 'material-ui-dropzone'
 
 const $ = window.$
 
+const prioritySelectOptions = ["None", "Keynote", "Priority"]
+
 
 class EditSpeaker extends Component {
   state = {
@@ -53,6 +55,13 @@ class EditSpeaker extends Component {
     });
   }
   }
+
+  // componentDidUpdate() {
+  //   if (this.refs.priorityselect) {
+  //     console.log(this.refs.priorityselect.state)
+  //     this.refs.priorityselect.handleSetSelect(prioritySelectOptions[0], 0)
+  //   }
+  // }
 
   saveHotkey = e => {
     if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.keyCode === 83) {
@@ -195,11 +204,13 @@ class EditSpeaker extends Component {
             <span className="validation-text">{this.state.errors.headshot}</span>
           </div>
 
-          <div className="input-field">
-            <ReactMaterialSelect label='Priority' resetLabel={false} defaultValue={this.state.priority} onChange={this.handleSelect}>
-              <option dataValue={0}>None</option>
-              <option dataValue={1}>Keynote</option>
-              <option dataValue={2}>Priority</option>
+          <div id="prioritySelect" className="input-field">
+            <ReactMaterialSelect ref="priorityselect" label='Priority' resetLabel={true} defaultValue={speaker.priority} onChange={this.handleSelect}>
+              {prioritySelectOptions.map((option, i) => {
+                return (
+                <option key={i} dataValue={i}>{option}</option>
+                )
+              })}
             </ReactMaterialSelect>
           </div>
 

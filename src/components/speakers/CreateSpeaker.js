@@ -6,6 +6,8 @@ import { Editor } from '@tinymce/tinymce-react'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { Modal, Button } from "react-materialize"
+import ReactMaterialSelect from 'react-material-select'
+import 'react-material-select/lib/css/reactMaterialSelect.css'
 import { DropzoneArea } from 'material-ui-dropzone'
 
 const uuidv4 = require('uuid/v4')
@@ -22,6 +24,7 @@ class CreateSpeaker extends Component {
     companySite: '',
     content: 'Enter your Modal Content here...',
     publish: false,
+    priority: 0,
     headshot: '',
     errors: {}
   }
@@ -48,10 +51,16 @@ class CreateSpeaker extends Component {
     })
   }
 
+  handleSelect = (e) => {
+    this.setState({
+      priority: e.value
+    })
+  }
+
   handleFile = (file, firebase) => {
     firebase.uploadFile(('speaker_images/' + Date.now()), file)
       .then(res => {
-        res.uploadTaskSnapshot.ref.getDownloadURL().then( downloadURL => {
+        res.uploadTaskSnapshot.ref.getDownloadURL().then(downloadURL => {
           this.setState({ headshot: downloadURL })
         });
       })
@@ -61,7 +70,7 @@ class CreateSpeaker extends Component {
   }
 
   handleImageDelete = (image) => {
-    this.setState({headshot: ''})
+    this.setState({ headshot: '' })
   }
 
   handleEditorChange = (e) => {
@@ -120,129 +129,137 @@ class CreateSpeaker extends Component {
 
     if (!auth.uid) { return <Redirect to='/signin' /> }
 
-      return (
-        <div className="container" >
+    return (
+      <div className="container" >
 
-          <Modal
-            id="save-modal"
-            header='Success!'
-          >
-            {this.isPublished()}
-          </Modal>
+        <Modal
+          id="save-modal"
+          header='Success!'
+        >
+          {this.isPublished()}
+        </Modal>
 
-          <form className="white speaker-form">
-            <div className="switch right-align publish-switch">
-              <label>Publish:
+        <form className="white speaker-form">
+          <div className="switch right-align publish-switch">
+            <label>Publish:
               <input id="publish" onChange={(e) => { this.setState({ publish: e.target.checked }) }} type="checkbox" />
-                <span className="lever"></span>
-              </label>
-            </div>
-            <h5 className="grey-text text-darken-3">Create a New Speaker</h5>
+              <span className="lever"></span>
+            </label>
+          </div>
+          <h5 className="grey-text text-darken-3">Create a New Speaker</h5>
 
-            <div className="input-field">
-              <label htmlFor="firstName">First Name</label>
-              <input type="text" id="firstName" onChange={this.handleChange} />
-              <span className="validation-text">{this.state.errors.firstName}</span>
-            </div>
+          <div className="input-field">
+            <label htmlFor="firstName">First Name</label>
+            <input type="text" id="firstName" onChange={this.handleChange} />
+            <span className="validation-text">{this.state.errors.firstName}</span>
+          </div>
 
-            <div className="input-field">
-              <label htmlFor="lastName">Last Name</label>
-              <input type="text" id="lastName" onChange={this.handleChange} />
-              <span className="validation-text">{this.state.errors.lastName}</span>
-            </div>
+          <div className="input-field">
+            <label htmlFor="lastName">Last Name</label>
+            <input type="text" id="lastName" onChange={this.handleChange} />
+            <span className="validation-text">{this.state.errors.lastName}</span>
+          </div>
 
-            <div className="input-field">
-              <label>Speaker Headshot</label>
-              <div className="dropzone-container">
-                <div><img className="headshot-img" src={this.state.headshot !== '' ? `${this.state.headshot}` : '/img/headshot-placeholder.jpg'} alt="Speaker Headshot" /></div>
-                <DropzoneArea
-                  dropZoneClass="headshot-dropzone"
-                  dropzoneText='Drag &amp; drop image. Size: 250 X 250px.'
-                  onDrop={file => { this.handleFile(file, firebase) }}
-                  filesLimit={1}
-                  acceptedFiles={['image/*']}
-                  onDelete={this.handleImageDelete}
-                />
-              </div>
-              <span className="validation-text">{this.state.errors.headshot}</span>
-            </div>
-
-            <div className="input-field">
-              <label htmlFor="title">Job Title</label>
-              <input type="text" id="title" onChange={this.handleChange} />
-              <span className="validation-text">{this.state.errors.title}</span>
-            </div>
-
-            <div className="input-field">
-              <label htmlFor="company">Company Name</label>
-              <input type="text" id="company" onChange={this.handleChange} />
-              <span className="validation-text">{this.state.errors.company}</span>
-            </div>
-
-            <div className="input-field">
-              <label htmlFor="companySite">Company Website</label>
-              <input type="text" id="companySite" onChange={this.handleChange} />
-              <span className="validation-text">{this.state.errors.companySite}</span>
-            </div>
-
-            <div className='input-field'>
-              <label id="modal-label">Modal Content</label>
-              <Editor
-                id='content'
-                apiKey={apiKey}
-                initialValue={this.state.content}
-                init={{
-                  plugins: ['advlist autolink link image lists charmap print preview hr anchor pagebreak',
-                    'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'table contextmenu directionality emoticons paste textcolor'],
-                  toolbar: 'formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview',
-                  branding: false,
-                  height: 400,
-                  inline: true,
-                  images_upload_handler: function (blobInfo, success, failure) {
-                    let blob = blobInfo.blob()
-                    firebase.uploadFile(('speaker_images/' + Date.now()), blob)
-                      .then(res => {
-                        res.uploadTaskSnapshot.ref.getDownloadURL().then(function (downloadURL) {
-                          success(downloadURL);
-                        });
-                      })
-                      .catch(err => {
-                        failure(err)
-                      })
-                  },
-                }}
-                onChange={this.handleEditorChange}
+          <div className="input-field">
+            <label>Speaker Headshot</label>
+            <div className="dropzone-container">
+              <div><img className="headshot-img" src={this.state.headshot !== '' ? `${this.state.headshot}` : '/img/headshot-placeholder.jpg'} alt="Speaker Headshot" /></div>
+              <DropzoneArea
+                dropZoneClass="headshot-dropzone"
+                dropzoneText='Drag &amp; drop image. Size: 250 X 250px.'
+                onDrop={file => { this.handleFile(file, firebase) }}
+                filesLimit={1}
+                acceptedFiles={['image/*']}
+                onDelete={this.handleImageDelete}
               />
-              <span className="validation-text">{this.state.errors.content}</span>
             </div>
+            <span className="validation-text">{this.state.errors.headshot}</span>
+          </div>
 
-            <div className="input-field">
-              {this.state.publish ? <div><Button onClick={this.handleSubmit} className="btn submit-btn pink lighten-1 z-depth-0">
-                Save
+          <div className="input-field">
+            <ReactMaterialSelect label='Priority' resetLabel={false} defaultValue="" onChange={this.handleSelect}>
+              <option dataValue={0}>None</option>
+              <option dataValue={1}>Keynote</option>
+              <option dataValue={2}>Priority</option>
+            </ReactMaterialSelect>
+          </div>
+
+          <div className="input-field">
+            <label htmlFor="title">Job Title</label>
+            <input type="text" id="title" onChange={this.handleChange} />
+            <span className="validation-text">{this.state.errors.title}</span>
+          </div>
+
+          <div className="input-field">
+            <label htmlFor="company">Company Name</label>
+            <input type="text" id="company" onChange={this.handleChange} />
+            <span className="validation-text">{this.state.errors.company}</span>
+          </div>
+
+          <div className="input-field">
+            <label htmlFor="companySite">Company Website</label>
+            <input type="text" id="companySite" onChange={this.handleChange} />
+            <span className="validation-text">{this.state.errors.companySite}</span>
+          </div>
+
+          <div className='input-field'>
+            <label id="modal-label">Modal Content</label>
+            <Editor
+              id='content'
+              apiKey={apiKey}
+              initialValue={this.state.content}
+              init={{
+                plugins: ['advlist autolink link image lists charmap print preview hr anchor pagebreak',
+                  'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+                  'table contextmenu directionality emoticons paste textcolor'],
+                toolbar: 'formatselect fontsizeselect forecolor backcolor | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image media emoticons | preview',
+                branding: false,
+                height: 400,
+                inline: true,
+                images_upload_handler: function (blobInfo, success, failure) {
+                  let blob = blobInfo.blob()
+                  firebase.uploadFile(('speaker_images/' + Date.now()), blob)
+                    .then(res => {
+                      res.uploadTaskSnapshot.ref.getDownloadURL().then(function (downloadURL) {
+                        success(downloadURL);
+                      });
+                    })
+                    .catch(err => {
+                      failure(err)
+                    })
+                },
+              }}
+              onChange={this.handleEditorChange}
+            />
+            <span className="validation-text">{this.state.errors.content}</span>
+          </div>
+
+          <div className="input-field">
+            {this.state.publish ? <div><Button onClick={this.handleSubmit} className="btn submit-btn pink lighten-1 z-depth-0">
+              Save
                   </Button></div> : <Modal
-                  trigger={
-                    <Button className="btn pink submit-btn lighten-1 z-depth-0">
-                      Save
+                trigger={
+                  <Button className="btn pink submit-btn lighten-1 z-depth-0">
+                    Save
                   </Button>
-                  }
-                  header='Would you like to publish?'
-                  actions={<div><Button onClick={this.handlePublish} className="btn z-depth-0 yes-button modal-close">
-                    Yes
+                }
+                header='Would you like to publish?'
+                actions={<div><Button onClick={this.handlePublish} className="btn z-depth-0 yes-button modal-close">
+                  Yes
               </Button>
-                    <Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0 modal-close">
-                      No
+                  <Button onClick={this.handleSubmit} className="btn pink lighten-1 z-depth-0 modal-close">
+                    No
               </Button></div>}
-                >
-                  <p>
-                    Would you like to publish this speaker as well?
+              >
+                <p>
+                  Would you like to publish this speaker as well?
                 </p>
-                </Modal>}
-              <span className="validation-text">{this.state.errors.general}</span>
-            </div>
-          </form>
-        </div>
-      )
+              </Modal>}
+            <span className="validation-text">{this.state.errors.general}</span>
+          </div>
+        </form>
+      </div>
+    )
   }
 }
 

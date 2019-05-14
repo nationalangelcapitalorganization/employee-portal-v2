@@ -6,6 +6,8 @@ import { Editor } from '@tinymce/tinymce-react'
 import { compose } from 'redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { Modal, Button } from "react-materialize"
+import ReactMaterialSelect from 'react-material-select'
+import 'react-material-select/lib/css/reactMaterialSelect.css'
 import { DropzoneArea } from 'material-ui-dropzone'
 
 
@@ -22,6 +24,7 @@ class EditSpeaker extends Component {
     companySite: this.props.speaker ? this.props.speaker.companySite : '',
     content: this.props.speaker ? this.props.speaker.content : 'Enter your Modal Content here...',
     publish: this.props.speaker ? this.props.speaker.publish : false,
+    priority: this.props.speaker ? this.props.speaker.priority : 0,
     headshot: this.props.speaker ? this.props.speaker.headshot : '',
     errors: {}
   }
@@ -45,6 +48,7 @@ class EditSpeaker extends Component {
       companySite: nextProps.speaker.companySite,
       content: nextProps.speaker.content,
       publish: nextProps.speaker.publish,
+      priority: nextProps.speaker.priority,
       headshot: nextProps.speaker.headshot,
     });
   }
@@ -83,6 +87,12 @@ class EditSpeaker extends Component {
   handleEditorChange = (e) => {
     const content = e.target.getContent()
     this.setState({ content: content });
+  }
+
+  handleSelect = (e) => {
+    this.setState({
+      priority: e.value
+    })
   }
 
   handleSubmit = (e) => {
@@ -183,6 +193,14 @@ class EditSpeaker extends Component {
             />
             </div>
             <span className="validation-text">{this.state.errors.headshot}</span>
+          </div>
+
+          <div className="input-field">
+            <ReactMaterialSelect label='Priority' resetLabel={false} defaultValue={this.state.department} onChange={this.handleSelect}>
+              <option dataValue={0}>None</option>
+              <option dataValue={1}>Keynote</option>
+              <option dataValue={2}>Priority</option>
+            </ReactMaterialSelect>
           </div>
 
           <div className="input-field">
